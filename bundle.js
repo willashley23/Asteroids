@@ -90,6 +90,20 @@
 	  this.pos[1] += this.vel[1];
 	};
 
+	//Dist([x_1, y_1], [x_2, y_2]) = sqrt((x_1 - x_2) ** 2 + (y_1 - y_2) ** 2)
+	MovingObject.prototype.isCollidedWith = function(otherObject) {
+	  let dist = Math.sqrt(
+	    Math.pow((this.pos[0]-otherObject.pos[0]),2) + Math.pow(
+	      (this.pos[1]-otherObject.pos[1]),2));
+	  let radii = this.radius + otherObject.radius;
+	  return dist < radii;
+	};
+
+	MovingObject.prototype.collideWith = function(otherObject) {
+	  this.game.removeAsteroid(this);
+	  this.game.removeAsteroid(otherObject);
+	};
+
 
 	module.exports = MovingObject;
 
@@ -112,7 +126,7 @@
 	  // }, 20);
 
 	  const animate = () => {
-	    this.game.moveObjects();
+	    this.game.step();
 	    this.game.draw(this.ctx);
 	    requestAnimationFrame(animate);
 	  };
@@ -171,6 +185,31 @@
 	    this.asteroids.push(asteroid);
 	  }
 	};
+
+
+	Game.prototype.checkCollisions = function () {
+	  this.asteroids.forEach( (asteroid1) => {
+	    this.asteroids.forEach( (asteroid2) => {
+	      if (asteroid1.isCollidedWith(asteroid2) && asteroid1 !== asteroid2) {
+	        asteroid1.collideWith(asteroid2);
+	      }
+	    });
+	  });
+	};
+
+	Game.prototype.removeAsteroid = function (asteroid) {
+	  let idx = this.asteroids.indexOf(asteroid);
+	  if (idx > -1) {
+	    this.asteroids.splice(idx, 1);
+	  }
+	};
+
+
+	Game.prototype.step = function () {
+	  this.moveObjects();
+	  this.checkCollisions();
+	};
+
 
 	module.exports = Game;
 
