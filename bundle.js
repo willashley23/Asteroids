@@ -56,10 +56,12 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	const Game = __webpack_require__(3);
 
 	function MovingObject(options) {
-
+	  this.game = options['game'];
 	  this.pos = options['pos'];
 	  this.vel = options['vel'];
 	  this.radius = options['radius'];
@@ -83,6 +85,7 @@
 
 
 	MovingObject.prototype.move = function () {
+	  this.pos = this.game.wrap(this.pos);
 	  this.pos[0] += this.vel[0];
 	  this.pos[1] += this.vel[1];
 	};
@@ -130,12 +133,12 @@
 	  this.addAsteroids();
 	}
 
-	Game.DIM_X = 500;
-	Game.DIM_Y = 500;
+	Game.DIM_X = 800;
+	Game.DIM_Y = 800;
 	Game.NUM_ASTEROIDS = 5;
 
 	Game.prototype.draw = function(ctx) {
-	  ctx.clearRect(0, 0, 500, 500);
+	  ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
 	  this.asteroids.forEach( (asteroid) => {
 	    asteroid.draw(ctx);
 	  });
@@ -147,11 +150,24 @@
 	  });
 	};
 
+	Game.prototype.wrap = function(pos) {
+	  let newX = pos[0];
+	  let newY = pos[1];
+	  if (newX > Game.DIM_X+ 50) {
+	    newX = 0;
+	  }
+	  if (newY > Game.DIM_Y + 50) {
+	    newY = 0;
+	  }
+	  return [newX, newY];
+	};
+
+
 	Game.prototype.addAsteroids = function() {
 	  for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
 	    let x = Math.floor(Math.random() * 500 );
 	    let y = Math.floor(Math.random() * 500);
-	    let asteroid = new Asteroid({pos: [x, y]});
+	    let asteroid = new Asteroid({game: this, pos: [x, y]});
 	    this.asteroids.push(asteroid);
 	  }
 	};
@@ -168,7 +184,7 @@
 	const MovingObject = __webpack_require__(1);
 
 	function Asteroid(posOptions) {
-	  let options = {color: 'brown', pos: posOptions['pos'], radius: 30, vel: Utils.randomVec()}
+	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: 30, vel: Utils.randomVec()}
 	  MovingObject.call(this, options);
 	}
 
