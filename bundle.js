@@ -154,11 +154,17 @@
 	Game.prototype.wrap = function(pos) {
 	  let newX = pos[0];
 	  let newY = pos[1];
-	  if (newX > Game.DIM_X+ 50) {
+	  if (newX > Game.DIM_X + 50) {
 	    newX = 0;
 	  }
 	  if (newY > Game.DIM_Y + 50) {
 	    newY = 0;
+	  }
+	  if (newX < 0) {
+	    newX = Game.DIM_X;
+	  }
+	  if (newY < 0) {
+	    newY = Game.DIM_Y;
 	  }
 	  return [newX, newY];
 	};
@@ -332,6 +338,7 @@
 	function Ship(posOptions) {
 	  let options = {game: posOptions['game'], color: 'green', pos: posOptions['pos'], radius: 20, vel: [0,0], wrappable: true}
 	  MovingObject.call(this, options);
+	  this.faceingDir = [0,0];
 	}
 
 	Utils.inherits(Ship, MovingObject);
@@ -353,6 +360,15 @@
 	  this.game.bullets.push(bullet);
 	};
 
+	Ship.prototype.move = function () {
+	  if (this.isWrappable) {
+	    this.pos = this.game.wrap(this.pos);
+	  }
+	  this.pos[0] += this.vel[0];
+	  this.pos[1] += this.vel[1];
+	  this.vel[0] *= .98;
+	  this.vel[1] *= .98;
+	};
 
 	module.exports = Ship;
 
