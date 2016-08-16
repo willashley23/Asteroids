@@ -60,7 +60,7 @@
 
 	/* globals key */
 	const Game = __webpack_require__(2);
-
+	let speed = 1;
 
 
 	function GameView(ctx) {
@@ -71,8 +71,12 @@
 	GameView.prototype.start = function () {
 	  this.bindKeyHandlers();
 	  const animate = () => {
+	    speed += 1;
+	    if (speed >= 605) {
+	      speed = 0;
+	    };
 	    this.game.step();
-	    this.game.draw(this.ctx);
+	    this.game.draw(this.ctx, speed);
 	    requestAnimationFrame(animate);
 	  };
 	  animate();
@@ -106,6 +110,7 @@
 
 	const Asteroid = __webpack_require__(3);
 	const Ship = __webpack_require__(6);
+	const img = new Image();
 
 	function Game() {
 	  this.asteroids = [];
@@ -115,20 +120,26 @@
 	}
 
 	Game.DIM_X = 800;
-	Game.DIM_Y = 800;
+	Game.DIM_Y = 605;
 	Game.NUM_ASTEROIDS = 5;
 
-	let that = this;
-	const img = new Image();
-	img.onload = function () {
-	  that.ctx.drawImage(img, 0, 0)
-	};
-	img.src = 'space.png';
 
-	Game.prototype.draw = function(ctx) {
+	Game.prototype.draw = function(ctx, speed) {
 	  ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
-	  ctx.drawImage(img, 0, 0);
-	  
+	  img.onload = function () {
+	    ctx.drawImage(img, 0, 0)
+	  };
+	  img.src = 'space.png';
+	  let y = 0;
+	  let x = 0;
+	  // Moved the lets togther.
+	  y += speed;
+	  ctx.drawImage(img, x,y);
+	  ctx.drawImage(img, x, y - Game.DIM_Y);
+	  if (y >= Game.DIM_Y) {
+	      console.log("hello")
+	      y = 0;
+	  };
 	  this.allObjects().forEach( (asteroid) => {
 	    asteroid.draw(ctx);
 	  });
