@@ -84,16 +84,16 @@
 
 	GameView.prototype.bindKeyHandlers = function() {
 	  key('d', () => {
-	    this.game.ship.power([.5, 0]);
+	    this.game.ship.power([1, 0]);
 	  });
 	  key('a', () => {
-	    this.game.ship.power([-.5, 0]);
+	    this.game.ship.power([-1, 0]);
 	  });
 	  key('s', () => {
-	    this.game.ship.power([0, .5]);
+	    this.game.ship.power([0, 1]);
 	  });
 	  key('w', () => {
-	    this.game.ship.power([0, -.5]);
+	    this.game.ship.power([0, -1]);
 	  });
 	  key('l', () => {
 	    this.game.ship.fireBullet();
@@ -140,8 +140,8 @@
 	      console.log("hello")
 	      y = 0;
 	  };
-	  this.allObjects().forEach( (asteroid) => {
-	    asteroid.draw(ctx);
+	  this.allObjects().forEach( (object) => {
+	    object.draw(ctx);
 	  });
 	};
 
@@ -368,6 +368,15 @@
 	  this.pos[1] += this.vel[1];
 	  this.vel[0] *= .98;
 	  this.vel[1] *= .98;
+	};
+
+	Ship.prototype.draw = function (ctx) {
+	  const img = new Image();
+	   img.onload = function () {
+	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	  };
+	  img.src = 'galaga_ship.png';
+	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	};
 
 	module.exports = Ship;
