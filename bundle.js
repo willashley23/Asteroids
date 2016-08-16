@@ -61,7 +61,6 @@
 	/* globals key */
 	const Game = __webpack_require__(2);
 
-	// const KeyMaster = require('./keymaster.js');
 
 
 	function GameView(ctx) {
@@ -80,19 +79,19 @@
 	};
 
 	GameView.prototype.bindKeyHandlers = function() {
-	  key('right', () => {
-	    this.game.ship.power([1, 0]);
+	  key('d', () => {
+	    this.game.ship.power([.5, 0]);
 	  });
-	  key('left', () => {
-	    this.game.ship.power([-1, 0]);
+	  key('a', () => {
+	    this.game.ship.power([-.5, 0]);
 	  });
-	  key('down', () => {
-	    this.game.ship.power([0, 1]);
+	  key('s', () => {
+	    this.game.ship.power([0, .5]);
 	  });
-	  key('up', () => {
-	    this.game.ship.power([0, -1]);
+	  key('w', () => {
+	    this.game.ship.power([0, -.5]);
 	  });
-	  key('space', () => {
+	  key('l', () => {
 	    this.game.ship.fireBullet();
 	  });
 	};
@@ -119,8 +118,17 @@
 	Game.DIM_Y = 800;
 	Game.NUM_ASTEROIDS = 5;
 
+	let that = this;
+	const img = new Image();
+	img.onload = function () {
+	  that.ctx.drawImage(img, 0, 0)
+	};
+	img.src = 'space.png';
+
 	Game.prototype.draw = function(ctx) {
 	  ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
+	  ctx.drawImage(img, 0, 0);
+	  
 	  this.allObjects().forEach( (asteroid) => {
 	    asteroid.draw(ctx);
 	  });
@@ -345,24 +353,14 @@
 	
 	const Utils = __webpack_require__(4);
 	const MovingObject = __webpack_require__(5);
-	// const Asteroid = require('./asteroid.js');
 
 	function Bullet(posOptions) {
-	  let options = {game: posOptions['game'], color: 'red', pos: posOptions['pos'], radius: 10, vel: posOptions['vel'], wrappable: false}
+	  let options = {game: posOptions['game'], color: 'red', pos: posOptions['pos'], radius: 5, vel: posOptions['vel'], wrappable: false}
 	  MovingObject.call(this, options);
 	}
 	Utils.inherits(Bullet, MovingObject);
 	console.log(Bullet);
 	console.log(MovingObject);
-	// console.log(Asteroid);
-
-	Bullet.prototype.collideWith = function(otherObject) {
-	  // debugger;
-	  // if (otherObject instanceof Asteroid) {
-	  //   this.game.removeAsteroid(otherObject);
-	  // }
-	};
-
 
 
 	module.exports = Bullet;
