@@ -228,7 +228,8 @@
 	const Bullet = __webpack_require__(7);
 
 	function Asteroid(posOptions) {
-	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: 30, vel: Utils.randomVec(), wrappable: true}
+	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: 30, vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum()
+	}
 	  MovingObject.call(this, options);
 	}
 	Utils.inherits(Asteroid, MovingObject);
@@ -240,6 +241,26 @@
 	  } else if (otherObject instanceof Bullet) {
 			this.game.removeAsteroid(this);
 		}
+	};
+
+
+	  
+	Asteroid.prototype.draw = function (ctx) {
+	  if (this.type === 1) {
+	  const img = new Image();
+	   img.onload = function () {
+	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	  };
+	    img.src = 'asteroid1.png';
+	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  } else {
+	    const img = new Image();
+	   img.onload = function () {
+	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	  };
+	    img.src = 'asteroid2.png';
+	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  }
 	};
 
 	module.exports = Asteroid;
@@ -261,8 +282,12 @@
 	    let x = Math.floor(Math.random() * 2 ) + 1;
 	    let y = Math.floor(Math.random() * 2 ) + 1;
 	    return [x,y];
-	  }
+	  },
 
+	    randomNum: function() {
+	      let num = Math.floor(Math.random() * 2) + 1
+	      return num;
+	    }
 
 	};
 
@@ -282,6 +307,7 @@
 	  this.radius = options['radius'];
 	  this.color = options['color'];
 	  this.isWrappable = options['wrappable'];
+	  this.type = options['type'];
 	}
 
 
@@ -336,7 +362,7 @@
 	const Bullet = __webpack_require__(7);
 
 	function Ship(posOptions) {
-	  let options = {game: posOptions['game'], color: 'green', pos: posOptions['pos'], radius: 20, vel: [0,0], wrappable: true}
+	  let options = {game: posOptions['game'], color: 'green', pos: posOptions['pos'], radius: 20, vel: [0,0], wrappable: true, type: 0}
 	  MovingObject.call(this, options);
 	  this.faceingDir = [0,0];
 	}
@@ -356,9 +382,6 @@
 
 	Ship.prototype.fireBullet = function () {
 	  let bulletVel = [(this.vel[0] * 4), (this.vel[1] * 5) - 10];
-	  // if (this.vel = [0,0]) {
-	  //   bulletVel = [(this.vel[0] * 4), (this.vel[1] * 4) - 10];
-	  // }
 	  let bullet = new Bullet({pos: this.pos, vel: bulletVel, game: this.game});
 	  this.game.bullets.push(bullet);
 	};
@@ -396,7 +419,7 @@
 	const MovingObject = __webpack_require__(5);
 
 	function Bullet(posOptions) {
-	  let options = {game: posOptions['game'], color: 'red', pos: posOptions['pos'], radius: 5, vel: posOptions['vel'], wrappable: false}
+	  let options = {game: posOptions['game'], color: 'red', pos: posOptions['pos'], radius: 5, vel: posOptions['vel'], wrappable: false, type: 0}
 	  MovingObject.call(this, options);
 	}
 	Utils.inherits(Bullet, MovingObject);
