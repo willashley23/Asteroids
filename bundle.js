@@ -84,16 +84,16 @@
 
 	GameView.prototype.bindKeyHandlers = function() {
 	  key('d', () => {
-	    this.game.ship.power([1, 0]);
+	    this.game.ship.power([2, 0]);
 	  });
 	  key('a', () => {
-	    this.game.ship.power([-1, 0]);
+	    this.game.ship.power([-2, 0]);
 	  });
 	  key('s', () => {
-	    this.game.ship.power([0, 1]);
+	    this.game.ship.power([0, 2]);
 	  });
 	  key('w', () => {
-	    this.game.ship.power([0, -1]);
+	    this.game.ship.power([0, -2]);
 	  });
 	  key('l', () => {
 	    this.game.ship.fireBullet();
@@ -258,8 +258,8 @@
 	  },
 
 	   randomVec: function() {
-	    let x = Math.floor(Math.random() * 5 );
-	    let y = Math.floor(Math.random() * 5 );
+	    let x = Math.floor(Math.random() * 2 ) + 1;
+	    let y = Math.floor(Math.random() * 2 ) + 1;
 	    return [x,y];
 	  }
 
@@ -349,13 +349,13 @@
 	};
 
 	Ship.prototype.power = function (impulse) {
-	  console.log(this.vel);
+	  // console.log(this.vel);
 	  this.vel[0] += impulse[0];
 	  this.vel[1] += impulse[1];
 	};
 
 	Ship.prototype.fireBullet = function () {
-	  let bulletVel = [this.vel[0] + 2, this.vel[1] + 5];
+	  let bulletVel = [(this.vel[0] * 4), (this.vel[1] * 4) - 1];
 	  let bullet = new Bullet({pos: this.pos, vel: bulletVel, game: this.game});
 	  this.game.bullets.push(bullet);
 	};
@@ -374,9 +374,11 @@
 	  const img = new Image();
 	   img.onload = function () {
 	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	    // img.rotate(10*Math.PI/180)
 	  };
 	  img.src = 'galaga_ship.png';
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  // img.rotate(10*Math.PI/180)
 	};
 
 	module.exports = Ship;
