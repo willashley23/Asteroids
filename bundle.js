@@ -355,7 +355,10 @@
 	};
 
 	Ship.prototype.fireBullet = function () {
-	  let bulletVel = [(this.vel[0] * 4), (this.vel[1] * 4) - 1];
+	  let bulletVel = [(this.vel[0] * 4), (this.vel[1] * 5) - 10];
+	  // if (this.vel = [0,0]) {
+	  //   bulletVel = [(this.vel[0] * 4), (this.vel[1] * 4) - 10];
+	  // }
 	  let bullet = new Bullet({pos: this.pos, vel: bulletVel, game: this.game});
 	  this.game.bullets.push(bullet);
 	};
@@ -397,8 +400,24 @@
 	  MovingObject.call(this, options);
 	}
 	Utils.inherits(Bullet, MovingObject);
-	console.log(Bullet);
-	console.log(MovingObject);
+
+
+	Bullet.prototype.draw = function (ctx) {
+	  const img = new Image();
+	   img.onload = function () {
+	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	    
+	  };
+	  img.src = 'laser.png';
+	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  //These need to rotate too
+
+	};
+
+
+
+	// console.log(Bullet);
+	// console.log(MovingObject);
 
 
 	module.exports = Bullet;
