@@ -402,6 +402,20 @@
 	  }
 	  this.vel[0] += impulse[0];
 	  this.vel[1] += impulse[1];
+
+	  let dest = [(this.pos[0]+impulse[0]),[(this.pos[1]+impulse[1])]];
+	  let targetX = dest[0];
+	  let targetY = dest[1];
+	  var tx = targetX - this.pos[0]
+	  var ty = targetY - this.pos[1]
+	  let dist = Math.sqrt(tx * tx + ty * ty);
+	  var radians = Math.atan2(-tx,-ty);
+	     // this.px = this.x - this.pointLength * Math.cos(radians);
+	     // this.py = this.y - this.pointLength * Math.sin(radians);
+	  this.facingDir = radians;
+	  console.log(this.facingDir);
+	  //Try swapping nums, check what facing dir is when you press left or right. 
+
 	};
 
 	Ship.prototype.move = function () {
@@ -418,23 +432,33 @@
 	  return degree*(Math.PI/180);
 	}
 
+	Ship.prototype.rotateAndCache = function(image,angle) {
+	  var offscreenCanvas = document.createElement('canvas');
+	  var offscreenCtx = offscreenCanvas.getContext('2d');
+
+	  var size = Math.max(image.width, image.height);
+	  offscreenCanvas.width = size;
+	  offscreenCanvas.height = size;
+
+	  offscreenCtx.translate(size/2, size/2);
+	  offscreenCtx.rotate(angle);
+	  offscreenCtx.drawImage(image, -(image.width/2), -(image.height/2));
+
+	  return offscreenCanvas;
+	}
+
+
+
 	Ship.prototype.draw = function (ctx) {
 	  const img = new Image();
 	  img.onload = function () {
 	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
 	  };
 	  img.src = 'galaga_ship.png';
-	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
-	  // var x = 800 / 2;
-	  // var y = Math.floor(605 / 2);
-	  // var width = img.width;
-	  // var height = img.height;
-	  // ctx.save();
-	  // ctx.translate(this.x,this.y);
-	  // ctx.translate(25,25);
-	  // ctx.rotate(this.facingDir);
-	  // ctx.translate(-7,-10);
-	  // ctx.restore();
+	  // ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  let rotatedShip = this.rotateAndCache(img,this.facingDir)
+	  ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
+
 	};
 
 	module.exports = Ship;
