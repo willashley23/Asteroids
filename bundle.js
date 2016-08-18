@@ -249,14 +249,14 @@
 	  if (this.type === 1) {
 	  const img = new Image();
 	   img.onload = function () {
-	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	    ctx.drawImage(img, 0, 0)
 	  };
 	    img.src = 'asteroid1.png';
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  } else {
 	    const img = new Image();
 	   img.onload = function () {
-	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	    ctx.drawImage(img, 0, 0)
 	  };
 	    img.src = 'asteroid2.png';
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
@@ -360,17 +360,6 @@
 	  let options = {game: posOptions['game'], color: 'green', pos: posOptions['pos'], radius: 20, vel: [0,0], wrappable: true, type: 0, angle: 0}
 	  MovingObject.call(this, options);
 	  this.facingDir = 0;
-	  this.H = window.innerHeight; //*0.75,
-	  this.W = window.innerWidth; //*0.75;
-	  this.xc = this.W/2; //zeby bylo w centrum :v
-	  this.yc = this.H/2; //jw.
-	  this.x =  this.xc;
-	  this.y =  this.yc;
-	  this.dv = 0.2;
-	  this.dt = 1;
-	  this.vx = 0;
-	  this.vy = 0;
-	  this.maxVel = 10;
 	}
 
 	Utils.inherits(Ship, MovingObject);
@@ -382,7 +371,17 @@
 
 
 	Ship.prototype.fireBullet = function () {
-	  let bulletVel = [(this.vel[0] * 4), (this.vel[1] * 5) - 10];
+	  let bulletVel = [0,0]
+	  if (this.facingDir > 1.4 && this.facingDir < 2) {
+	    //90 deg angle
+	    bulletVel = [10,0]
+	  } else if (this.facingDir < 0) {
+	    bulletVel = [-10,0]
+	  } else if (this.facingDir > 2) {
+	    bulletVel = [0,10]
+	  } else {
+	    bulletVel = [0,-10]
+	  }
 	  let bullet = new Bullet({pos: this.pos, vel: bulletVel, game: this.game, angle: this.facingDir});
 	  this.game.bullets.push(bullet);
 	};
@@ -432,15 +431,12 @@
 	  return offscreenCanvas;
 	}
 
-
-
 	Ship.prototype.draw = function (ctx) {
 	  const img = new Image();
 	  img.onload = function () {
-	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	    ctx.drawImage(img, 0, 0)
 	  };
 	  img.src = 'galaga_ship.png';
-	  // ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  let rotatedShip = this.rotateAndCache(img,this.facingDir)
 	  ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
 
@@ -482,10 +478,9 @@
 	Bullet.prototype.draw = function (ctx) {
 	  const img = new Image();
 	  img.onload = function () {
-	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
+	    ctx.drawImage(img, 0,  0)
 	  };
 	  img.src = 'laser.png';
-	  // ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  let rotatedLaser = this.rotateAndCache(img,this.angle)
 	  ctx.drawImage(rotatedLaser, this.pos[0]-this.radius, this.pos[1]-this.radius)
 	};
