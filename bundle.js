@@ -170,13 +170,22 @@
 	};
 
 
-	Game.prototype.addAsteroids = function() {
-	  for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
-	    let x = Math.floor(Math.random() * 500 );
-	    let y = Math.floor(Math.random() * 500);
-	    let asteroid = new Asteroid({game: this, pos: [x, y]});
-	    this.asteroids.push(asteroid);
-	  }
+	Game.prototype.addAsteroids = function(fragment = null) {
+	   if (fragment === null) {
+	     for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
+	        let x = Math.floor(Math.random() * 500 );
+	        let y = Math.floor(Math.random() * 500);
+	        let asteroid = new Asteroid({game: this, pos: [x, y], radius: 30});
+	        this.asteroids.push(asteroid);
+	        } 
+	    } else {
+	         for (let i = 0; i < 3; i++) {
+	            let x = 0; 
+	            let y = 0;
+	            let asteroid = new Asteroid({game: this, pos: [x, y], radius: 15})
+	            this.asteroids.push(asteroid)
+	         }
+	      }
 	};
 
 
@@ -228,7 +237,7 @@
 	const Bullet = __webpack_require__(7);
 
 	function Asteroid(posOptions) {
-	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: 30, vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum(), angle: 0
+	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: posOptions['radius'], vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum(), angle: 0
 	}
 	  MovingObject.call(this, options);
 	}
@@ -238,8 +247,18 @@
 	Asteroid.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof Ship) {
 	    otherObject.relocate();
+	    //decrese lives here
 	  } else if (otherObject instanceof Bullet) {
-			this.game.removeAsteroid(this);
+	    if (this.radius === 30) {
+	      currPos = this.pos
+	      this.game.addAsteroids(true);
+			  this.game.removeAsteroid(this);
+	    } else {
+	      this.game.removeAsteroid(this);
+	    }
+	    //check this.asteriod radius to see if it can collapse smaller or just remove
+	    //spwan smaller asteroids here, call game.addAsteroid
+	    //try changing radius here? if not, will need to add radius to posOptions.
 		}
 	};
 
@@ -251,14 +270,22 @@
 	   img.onload = function () {
 	    ctx.drawImage(img, 0, 0)
 	  };
-	    img.src = 'asteroid1.png';
+	    if (this.radius === 15) {
+	      img.src = 'smallasteroid1.png';
+	    } else {
+	      img.src = 'asteroid1.png'
+	    }
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  } else {
 	    const img = new Image();
 	   img.onload = function () {
 	    ctx.drawImage(img, 0, 0)
 	  };
+	   if (this.radius === 15) {
+	    img.src = 'smallasteroid2.png'
+	   } else {
 	    img.src = 'asteroid2.png';
+	   }
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  }
 	};
