@@ -237,8 +237,17 @@
 	const Bullet = __webpack_require__(7);
 
 	function Asteroid(posOptions) {
-	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: posOptions['radius'], vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum(), angle: 0, justSpawned: posOptions['justSpawned']
-	}
+	  let options = {
+	    game: posOptions['game'], 
+	    color: 'brown', 
+	    pos: posOptions['pos'], 
+	    radius: posOptions['radius'], 
+	    vel: Utils.randomVec(), 
+	    wrappable: true, 
+	    type: Utils.randomNum(), 
+	    angle: 0, 
+	    justSpawned: posOptions['justSpawned']
+	  }
 	  MovingObject.call(this, options);
 	}
 	Utils.inherits(Asteroid, MovingObject);
@@ -250,10 +259,15 @@
 	    //decrease lives here
 	  } else if (otherObject instanceof Bullet) {
 	    if (this.radius === 30) {
+	      //remove bullet here once it collides with asteroid, 
+	      //issue is likely that the asteroids respawn under the bullet, 
+	      //isnstantly destroying them.
 	      currPos = this.pos
 	      this.game.addAsteroids(true, [this.pos[0],this.pos[1]]);
 			  this.game.removeAsteroid(this);
 	    } else if (!this.justSpawned) {
+	      //probably wont need this.
+	      //else{this.game.removeAsteroid(this)}
 	      console.log("removed")
 	      this.game.removeAsteroid(this);
 	    }
