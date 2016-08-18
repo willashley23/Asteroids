@@ -228,7 +228,7 @@
 	const Bullet = __webpack_require__(7);
 
 	function Asteroid(posOptions) {
-	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: 30, vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum()
+	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: 30, vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum(), angle: 0
 	}
 	  MovingObject.call(this, options);
 	}
@@ -308,6 +308,7 @@
 	  this.color = options['color'];
 	  this.isWrappable = options['wrappable'];
 	  this.type = options['type'];
+	  this.angle = options['angle'];
 	}
 
 	MovingObject.prototype.draw = function (ctx) {
@@ -356,7 +357,7 @@
 	const Bullet = __webpack_require__(7);
 
 	function Ship(posOptions) {
-	  let options = {game: posOptions['game'], color: 'green', pos: posOptions['pos'], radius: 20, vel: [0,0], wrappable: true, type: 0}
+	  let options = {game: posOptions['game'], color: 'green', pos: posOptions['pos'], radius: 20, vel: [0,0], wrappable: true, type: 0, angle: 0}
 	  MovingObject.call(this, options);
 	  this.facingDir = 0;
 	  this.H = window.innerHeight; //*0.75,
@@ -382,24 +383,12 @@
 
 	Ship.prototype.fireBullet = function () {
 	  let bulletVel = [(this.vel[0] * 4), (this.vel[1] * 5) - 10];
-	  let bullet = new Bullet({pos: this.pos, vel: bulletVel, game: this.game});
+	  let bullet = new Bullet({pos: this.pos, vel: bulletVel, game: this.game, angle: this.facingDir});
 	  this.game.bullets.push(bullet);
 	};
 
 	  
 	Ship.prototype.power = function (impulse) {
-	  if (impulse[0] === -2 && this.facingDir !== Math.PI) {
-	    this.facingDir <= Math.PI ? this.facingDir += 30 / 180 * Math.PI : this.facingDir -= 30 / 180 * Math.PI;
-	  }
-	  if (impulse[0] === 2 && this.facingDir !== 0) {
-	    this.facingDir <= 0 ? this.facingDir += 30 / 180 * Math.PI : this.facingDir -= 30 / 180 * Math.PI;
-	  }
-	  if (impulse[1] === 2 && this.facingDir !== (Math.PI / 2 * 3)) {
-	    this.facingDir <= (3 * Math.PI / 2) ? this.facingDir += 30 / 180 * Math.PI : this.facingDir -= 30 / 180 * Math.PI;
-	  }
-	  if (impulse[1] === -2 && this.facingDir !== (Math.PI / 2)) {
-	    this.facingDir <= (Math.PI / 2) ? this.facingDir += 30 / 180 * Math.PI : this.facingDir -= 30 / 180 * Math.PI;
-	  }
 	  this.vel[0] += impulse[0];
 	  this.vel[1] += impulse[1];
 
@@ -409,13 +398,9 @@
 	  var tx = targetX - this.pos[0]
 	  var ty = targetY - this.pos[1]
 	  let dist = Math.sqrt(tx * tx + ty * ty);
-	  var radians = Math.atan2(-tx,-ty);
-	     // this.px = this.x - this.pointLength * Math.cos(radians);
-	     // this.py = this.y - this.pointLength * Math.sin(radians);
+	  var radians = Math.atan2(-tx,-ty) * -1;
 	  this.facingDir = radians;
 	  console.log(this.facingDir);
-	  //Try swapping nums, check what facing dir is when you press left or right. 
-
 	};
 
 	Ship.prototype.move = function () {
@@ -473,11 +458,26 @@
 	const MovingObject = __webpack_require__(5);
 
 	function Bullet(posOptions) {
-	  let options = {game: posOptions['game'], color: 'red', pos: posOptions['pos'], radius: 5, vel: posOptions['vel'], wrappable: false, type: 0}
+	  let options = {game: posOptions['game'], color: 'red', pos: posOptions['pos'], radius: 5, vel: posOptions['vel'], wrappable: false, type: 0, angle: posOptions['angle']}
 	  MovingObject.call(this, options);
 	}
 	Utils.inherits(Bullet, MovingObject);
 
+
+	Bullet.prototype.rotateAndCache = function(image, angle) {
+	  var offscreenCanvas = document.createElement('canvas');
+	  var offscreenCtx = offscreenCanvas.getContext('2d');
+
+	  var size = Math.max(image.width, image.height);
+	  offscreenCanvas.width = size;
+	  offscreenCanvas.height = size;
+
+	  offscreenCtx.translate(size/2, size/2);
+	  offscreenCtx.rotate(angle);
+	  offscreenCtx.drawImage(image, -(image.width/2), -(image.height/2));
+
+	  return offscreenCanvas;
+	}
 
 	Bullet.prototype.draw = function (ctx) {
 	  const img = new Image();
@@ -485,8 +485,9 @@
 	    ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius)
 	  };
 	  img.src = 'laser.png';
-	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
-	  //These need to rotate too
+	  // ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  let rotatedLaser = this.rotateAndCache(img,this.angle)
+	  ctx.drawImage(rotatedLaser, this.pos[0]-this.radius, this.pos[1]-this.radius)
 	};
 
 	module.exports = Bullet;
