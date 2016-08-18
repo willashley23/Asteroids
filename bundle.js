@@ -170,7 +170,7 @@
 	};
 
 
-	Game.prototype.addAsteroids = function(fragment = null) {
+	Game.prototype.addAsteroids = function(fragment = null, respawnPos = null) {
 	   if (fragment === null) {
 	     for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
 	        let x = Math.floor(Math.random() * 500 );
@@ -180,9 +180,9 @@
 	        } 
 	    } else {
 	         for (let i = 0; i < 3; i++) {
-	            let x = 0; 
-	            let y = 0;
-	            let asteroid = new Asteroid({game: this, pos: [x, y], radius: 15})
+	            let x = respawnPos[0]; 
+	            let y = respawnPos[1];
+	            let asteroid = new Asteroid({game: this, pos: [x, y], radius: 15, justSpawned: true})
 	            this.asteroids.push(asteroid)
 	         }
 	      }
@@ -237,7 +237,7 @@
 	const Bullet = __webpack_require__(7);
 
 	function Asteroid(posOptions) {
-	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: posOptions['radius'], vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum(), angle: 0
+	  let options = {game: posOptions['game'], color: 'brown', pos: posOptions['pos'], radius: posOptions['radius'], vel: Utils.randomVec(), wrappable: true, type: Utils.randomNum(), angle: 0, justSpawned: posOptions['justSpawned']
 	}
 	  MovingObject.call(this, options);
 	}
@@ -247,18 +247,19 @@
 	Asteroid.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof Ship) {
 	    otherObject.relocate();
-	    //decrese lives here
+	    //decrease lives here
 	  } else if (otherObject instanceof Bullet) {
 	    if (this.radius === 30) {
 	      currPos = this.pos
-	      this.game.addAsteroids(true);
+	      this.game.addAsteroids(true, [this.pos[0],this.pos[1]]);
 			  this.game.removeAsteroid(this);
-	    } else {
+	    } else if (!this.justSpawned) {
+	      console.log("removed")
 	      this.game.removeAsteroid(this);
 	    }
-	    //check this.asteriod radius to see if it can collapse smaller or just remove
-	    //spwan smaller asteroids here, call game.addAsteroid
-	    //try changing radius here? if not, will need to add radius to posOptions.
+	    else {
+	      this.justSpawned = false;
+	    }
 		}
 	};
 
@@ -336,6 +337,7 @@
 	  this.isWrappable = options['wrappable'];
 	  this.type = options['type'];
 	  this.angle = options['angle'];
+	  this.justSpawned = options['justSpawned'];
 	}
 
 	MovingObject.prototype.draw = function (ctx) {
