@@ -50,7 +50,9 @@
 	  let canvasEl = document.getElementById('game-canvas');
 	  let ctx = canvasEl.getContext('2d');
 	  let gameView = new GameView(ctx);
-	  gameView.start();
+	  gameView.start( ()=> {
+	    alert("You lose!");
+	  });
 	});
 
 
@@ -68,7 +70,7 @@
 	  this.game = new Game();
 	}
 
-	GameView.prototype.start = function () {
+	GameView.prototype.start = function (callback) {
 	  this.bindKeyHandlers();
 	  const animate = () => {
 	    speed += 1;
@@ -78,8 +80,13 @@
 	    this.game.step();
 	    this.game.draw(this.ctx, speed);
 	    requestAnimationFrame(animate);
+	  
 	  };
-	  animate();
+	  if (this.game.lose()) {
+	    callback();
+	  } else {
+	    animate();
+	  }
 	};
 
 	GameView.prototype.bindKeyHandlers = function() {
@@ -117,6 +124,7 @@
 	  this.addAsteroids();
 	  this.ship = new Ship({pos: this.randomPosition(), game: this});
 	  this.bullets = [];
+	  this.lives = 3;
 	}
 
 	Game.DIM_X = 800;
@@ -137,7 +145,6 @@
 	  ctx.drawImage(img, x,y);
 	  ctx.drawImage(img, x, y - Game.DIM_Y);
 	  if (y >= Game.DIM_Y) {
-	      console.log("hello")
 	      y = 0;
 	  };
 	  this.allObjects().forEach( (object) => {
@@ -170,6 +177,18 @@
 	};
 
 
+	Game.prototype.decreaseLives = function() {
+	  this.lives -= 1;
+	}
+
+	Game.prototype.lose = function() {
+	  if (this.lives <= 0) {
+	    return true;
+	  } else {
+	    return false;
+	  };
+	}
+
 	Game.prototype.addAsteroids = function(fragment = null, respawnPos = null) {
 	   if (fragment === null) {
 	     for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
@@ -190,10 +209,10 @@
 
 
 	Game.prototype.checkCollisions = function () {
-	  this.allObjects().forEach( (asteroid1) => {
-	    this.allObjects().forEach( (asteroid2) => {
-	      if (asteroid1.isCollidedWith(asteroid2) && asteroid1 !== asteroid2) {
-	        asteroid1.collideWith(asteroid2);
+	  this.allObjects().forEach( (object1) => {
+	    this.allObjects().forEach( (object2) => {
+	      if (object1.isCollidedWith(object2) && object1 !== object2) {
+	        object1.collideWith(object2);
 	      }
 	    });
 	  });
@@ -256,7 +275,7 @@
 	    justSpawned: posOptions['justSpawned']
 	  }
 	  MovingObject.call(this, options);
-	  
+
 	}
 	Utils.inherits(Asteroid, MovingObject);
 
@@ -264,7 +283,7 @@
 	Asteroid.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof Ship) {
 	    otherObject.relocate();
-	    //decrease lives here
+	    this.game.decreaseLives();
 	  } else if (otherObject instanceof Bullet) {
 	    if (this.radius === 30 && Utils.fragmentChance() === 1) {
 	      this.game.removeBullet(otherObject);
@@ -447,7 +466,6 @@
 	  let dist = Math.sqrt(tx * tx + ty * ty);
 	  var radians = Math.atan2(-tx,-ty) * -1;
 	  this.facingDir = radians;
-	  console.log(this.facingDir);
 	};
 
 	Ship.prototype.move = function () {
