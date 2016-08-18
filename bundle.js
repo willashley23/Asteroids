@@ -256,6 +256,7 @@
 	    justSpawned: posOptions['justSpawned']
 	  }
 	  MovingObject.call(this, options);
+	  
 	}
 	Utils.inherits(Asteroid, MovingObject);
 
@@ -265,7 +266,7 @@
 	    otherObject.relocate();
 	    //decrease lives here
 	  } else if (otherObject instanceof Bullet) {
-	    if (this.radius === 30) {
+	    if (this.radius === 30 && Utils.fragmentChance() === 1) {
 	      this.game.removeBullet(otherObject);
 	      currPos = this.pos
 	      this.game.addAsteroids(true, [this.pos[0],this.pos[1]]);
@@ -328,6 +329,11 @@
 	  randomNum: function() {
 	    let num = Math.floor(Math.random() * 2) + 1
 	    return num;
+	  },
+
+	  fragmentChance: function() {
+	    let num = Math.floor(Math.random() * 3) + 1
+	    return num
 	  }
 
 	};
