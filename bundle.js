@@ -50,9 +50,7 @@
 	  let canvasEl = document.getElementById('game-canvas');
 	  let ctx = canvasEl.getContext('2d');
 	  let gameView = new GameView(ctx);
-	  gameView.start( ()=> {
-	    alert("You lose!");
-	  });
+	  gameView.start();
 	});
 
 
@@ -71,23 +69,34 @@
 	}
 
 	GameView.prototype.start = function (callback) {
+	  // let that = this
 	  this.bindKeyHandlers();
-	  const animate = () => {
+	  this.animate(0);
+	};
+
+	GameView.prototype.animate = function(time) {
+
 	    speed += 1;
 	    if (speed >= 605) {
 	      speed = 0;
 	    };
+	 
 	    this.game.step();
 	    this.game.draw(this.ctx, speed);
-	    requestAnimationFrame(animate);
-	  
-	  };
-	  if (this.game.lose()) {
-	    callback();
-	  } else {
-	    animate();
-	  }
+	    if(!this.game.lose()){
+	      requestAnimationFrame(this.animate.bind(this));
+	    }
+	    else {
+	    this.ctx.fillStyle = "white";
+	    this.ctx.font = "italic "+24+"pt Arial ";
+	    this.ctx.fillText(`Game Over \n Press Enter to restart`, 100,200 );
+	      key('enter', ()=>{
+	        this.game = new Game();
+	        this.start();
+	      });
+	    }
 	};
+
 
 	GameView.prototype.bindKeyHandlers = function() {
 	  key('d', () => {
@@ -134,8 +143,11 @@
 
 	Game.prototype.draw = function(ctx, speed) {
 	  ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
+	  let that = this;
 	  img.onload = function () {
-	    ctx.drawImage(img, 0, 0)
+	    if(!that.lose()) {
+	      ctx.drawImage(img, 0, 0)
+	    } 
 	  };
 	  img.src = 'space.png';
 	  let y = 0;
@@ -301,8 +313,11 @@
 	Asteroid.prototype.draw = function (ctx) {
 	  if (this.type === 1) {
 	  const img = new Image();
+	  let that = this
 	   img.onload = function () {
-	    ctx.drawImage(img, 0, 0)
+	    if(!that.game.lose()) {
+	      ctx.drawImage(img, 0, 0)
+	    } 
 	  };
 	    if (this.radius === 15) {
 	      img.src = 'smallasteroid1.png';
@@ -312,8 +327,11 @@
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  } else {
 	    const img = new Image();
+	    let that = this
 	   img.onload = function () {
-	    ctx.drawImage(img, 0, 0)
+	    if(!that.game.lose()) {
+	      ctx.drawImage(img, 0, 0)
+	    } 
 	  };
 	   if (this.radius === 15) {
 	    img.src = 'smallasteroid2.png'
@@ -499,8 +517,11 @@
 
 	Ship.prototype.draw = function (ctx) {
 	  const img = new Image();
+	  let that = this
 	  img.onload = function () {
-	    ctx.drawImage(img, 0, 0)
+	    if(!that.game.lose()) {
+	      ctx.drawImage(img, 0, 0)
+	    } 
 	  };
 	  img.src = 'galaga_ship.png';
 	  let rotatedShip = this.rotateAndCache(img,this.facingDir)
@@ -544,7 +565,9 @@
 	Bullet.prototype.draw = function (ctx) {
 	  const img = new Image();
 	  img.onload = function () {
-	    ctx.drawImage(img, 0,  0)
+	    if(!this.game.lose()) {
+	      ctx.drawImage(img, 0, 0)
+	    } 
 	  };
 	  img.src = 'laser.png';
 	  let rotatedLaser = this.rotateAndCache(img,this.angle)

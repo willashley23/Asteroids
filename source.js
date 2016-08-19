@@ -4,7 +4,5 @@ document.addEventListener("DOMContentLoaded", () => {
   let canvasEl = document.getElementById('game-canvas');
   let ctx = canvasEl.getContext('2d');
   let gameView = new GameView(ctx);
-  gameView.start( ()=> {
-    alert("You lose!");
-  });
+  gameView.start();
 });
