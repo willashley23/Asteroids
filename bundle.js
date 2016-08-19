@@ -69,18 +69,15 @@
 	}
 
 	GameView.prototype.start = function (callback) {
-	  // let that = this
 	  this.bindKeyHandlers();
 	  this.animate(0);
 	};
 
 	GameView.prototype.animate = function(time) {
-
 	    speed += 1;
 	    if (speed >= 605) {
 	      speed = 0;
 	    };
-	 
 	    this.game.step();
 	    this.game.draw(this.ctx, speed);
 	    if(!this.game.lose()){
@@ -140,7 +137,6 @@
 	Game.DIM_Y = 605;
 	Game.NUM_ASTEROIDS = 5;
 
-
 	Game.prototype.draw = function(ctx, speed) {
 	  ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
 	  let that = this;
@@ -152,7 +148,6 @@
 	  img.src = 'space.png';
 	  let y = 0;
 	  let x = 0;
-	  // Moved the lets togther.
 	  y += speed;
 	  ctx.drawImage(img, x,y);
 	  ctx.drawImage(img, x, y - Game.DIM_Y);
@@ -268,27 +263,26 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
 	const Utils = __webpack_require__(4);
 	const MovingObject = __webpack_require__(5);
 	const Ship = __webpack_require__(6);
 	const Bullet = __webpack_require__(7);
 
+
 	function Asteroid(posOptions) {
 	  let options = {
 	    game: posOptions['game'], 
-	    color: 'brown', 
 	    pos: posOptions['pos'], 
 	    radius: posOptions['radius'], 
+	    justSpawned: posOptions['justSpawned'],
 	    vel: Utils.randomVec(), 
 	    wrappable: true, 
 	    type: Utils.randomNum(), 
-	    angle: 0, 
-	    justSpawned: posOptions['justSpawned']
+	    angle: 0
 	  }
 	  MovingObject.call(this, options);
-
 	}
+
 	Utils.inherits(Asteroid, MovingObject);
 
 
@@ -307,8 +301,6 @@
 	    }
 		}
 	};
-
-
 	  
 	Asteroid.prototype.draw = function (ctx) {
 	  if (this.type === 1) {
@@ -389,7 +381,6 @@
 	  this.pos = options['pos'];
 	  this.vel = options['vel'];
 	  this.radius = options['radius'];
-	  this.color = options['color'];
 	  this.isWrappable = options['wrappable'];
 	  this.type = options['type'];
 	  this.angle = options['angle'];
@@ -442,7 +433,15 @@
 	const Bullet = __webpack_require__(7);
 
 	function Ship(posOptions) {
-	  let options = {game: posOptions['game'], color: 'green', pos: posOptions['pos'], radius: 20, vel: [0,0], wrappable: true, type: 0, angle: 0}
+	  let options = {
+	    game: posOptions['game'], 
+	    pos: posOptions['pos'],
+	    radius: 20,
+	    vel: [0,0],
+	    wrappable: true,
+	    type: 0,
+	    angle: 0  
+	  } 
 	  MovingObject.call(this, options);
 	  this.facingDir = 0;
 	}
@@ -458,7 +457,6 @@
 	Ship.prototype.fireBullet = function () {
 	  let bulletVel = [0,0]
 	  if (this.facingDir > 1.4 && this.facingDir < 2) {
-	    //90 deg angle
 	    bulletVel = [10,0]
 	  } else if (this.facingDir < 0) {
 	    bulletVel = [-10,0]
@@ -467,7 +465,12 @@
 	  } else {
 	    bulletVel = [0,-10]
 	  }
-	  let bullet = new Bullet({pos: this.pos, vel: bulletVel, game: this.game, angle: this.facingDir});
+	  let bullet = new Bullet( {
+	    pos: this.pos, 
+	    vel: bulletVel, 
+	    game: this.game, 
+	    angle: this.facingDir
+	  });
 	  this.game.bullets.push(bullet);
 	};
 
@@ -476,13 +479,13 @@
 	  this.vel[0] += impulse[0];
 	  this.vel[1] += impulse[1];
 
+	  // Calculate angle of ship
 	  let dest = [(this.pos[0]+impulse[0]),[(this.pos[1]+impulse[1])]];
 	  let targetX = dest[0];
 	  let targetY = dest[1];
-	  var tx = targetX - this.pos[0]
-	  var ty = targetY - this.pos[1]
-	  let dist = Math.sqrt(tx * tx + ty * ty);
-	  var radians = Math.atan2(-tx,-ty) * -1;
+	  let tx = targetX - this.pos[0]
+	  let ty = targetY - this.pos[1]
+	  let radians = Math.atan2(-tx,-ty) * -1;
 	  this.facingDir = radians;
 	};
 
@@ -492,6 +495,7 @@
 	  }
 	  this.pos[0] += this.vel[0];
 	  this.pos[1] += this.vel[1];
+	  // Attenuate velocity over time
 	  this.vel[0] *= .98;
 	  this.vel[1] *= .98;
 	};
@@ -500,11 +504,12 @@
 	  return degree*(Math.PI/180);
 	}
 
+	// Draw ship on seperate canvas in order to rotate
 	Ship.prototype.rotateAndCache = function(image,angle) {
-	  var offscreenCanvas = document.createElement('canvas');
-	  var offscreenCtx = offscreenCanvas.getContext('2d');
+	  let offscreenCanvas = document.createElement('canvas');
+	  let offscreenCtx = offscreenCanvas.getContext('2d');
 
-	  var size = Math.max(image.width, image.height);
+	  let size = Math.max(image.width, image.height);
 	  offscreenCanvas.width = size;
 	  offscreenCanvas.height = size;
 
@@ -526,7 +531,6 @@
 	  img.src = 'galaga_ship.png';
 	  let rotatedShip = this.rotateAndCache(img,this.facingDir)
 	  ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
-
 	};
 
 	module.exports = Ship;
@@ -536,22 +540,29 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
 	const Utils = __webpack_require__(4);
 	const MovingObject = __webpack_require__(5);
 
 	function Bullet(posOptions) {
-	  let options = {game: posOptions['game'], color: 'red', pos: posOptions['pos'], radius: 5, vel: posOptions['vel'], wrappable: false, type: 0, angle: posOptions['angle']}
+	  let options = { 
+	    game: posOptions['game'], 
+	    pos: posOptions['pos'], 
+	    vel: posOptions['vel'], 
+	    angle: posOptions['angle'],  
+	    radius: 5, 
+	    wrappable: false, 
+	    type: 0
+	  }
 	  MovingObject.call(this, options);
 	}
 	Utils.inherits(Bullet, MovingObject);
 
 
 	Bullet.prototype.rotateAndCache = function(image, angle) {
-	  var offscreenCanvas = document.createElement('canvas');
-	  var offscreenCtx = offscreenCanvas.getContext('2d');
+	  let offscreenCanvas = document.createElement('canvas');
+	  let offscreenCtx = offscreenCanvas.getContext('2d');
 
-	  var size = Math.max(image.width, image.height);
+	  let size = Math.max(image.width, image.height);
 	  offscreenCanvas.width = size;
 	  offscreenCanvas.height = size;
 
@@ -564,8 +575,9 @@
 
 	Bullet.prototype.draw = function (ctx) {
 	  const img = new Image();
+	  let that = this;
 	  img.onload = function () {
-	    if(!this.game.lose()) {
+	    if(!that.game.lose()) {
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
