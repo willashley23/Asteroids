@@ -124,6 +124,7 @@
 	const Asteroid = __webpack_require__(3);
 	const Ship = __webpack_require__(6);
 	const img = new Image();
+	const heart = new Image();
 
 	function Game() {
 	  this.asteroids = [];
@@ -137,6 +138,7 @@
 	Game.DIM_Y = 605;
 	Game.NUM_ASTEROIDS = 5;
 
+
 	Game.prototype.draw = function(ctx, speed) {
 	  ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
 	  let that = this;
@@ -145,12 +147,25 @@
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
+	  heart.onload = function () {
+	    if(!that.lose()) {
+	      ctx.drawImage(heart, 0,0);
+	    }
+	  }
+	  heart.src = 'heart.png';
 	  img.src = 'space.png';
 	  let y = 0;
 	  let x = 0;
+	  let heartPos = 0;
 	  y += speed;
 	  ctx.drawImage(img, x,y);
 	  ctx.drawImage(img, x, y - Game.DIM_Y);
+
+	  for (var i = this.lives-1; i >= 0; i--) {
+	    ctx.drawImage(heart, heartPos, 0);
+	    heartPos += 40
+	  }
+
 	  if (y >= Game.DIM_Y) {
 	      y = 0;
 	  };
