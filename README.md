@@ -1,7 +1,7 @@
 Features yet to be implemented:
 
-  ~ Display lives as hearts on top left corner of screen.
-  ~ Remove hearts when hit.
+<!--   ~ Display lives as hearts on top left corner of screen.
+  ~ Remove hearts when hit. -->
   ~ Add victory condition and render victory screen.
   ~ Add new powerUp < movingObject class.
     ~ Float across screen.

@@ -80,13 +80,17 @@
 	    };
 	    this.game.step();
 	    this.game.draw(this.ctx, speed);
-	    if(!this.game.lose()){
+	    if(!this.game.lose() && !this.game.win()){
 	      requestAnimationFrame(this.animate.bind(this));
 	    }
 	    else {
 	    this.ctx.fillStyle = "white";
 	    this.ctx.font = "italic "+24+"pt Arial ";
-	    this.ctx.fillText(`Game Over \n Press Enter to restart`, 100,200 );
+	      if(this.game.win()){
+	        this.ctx.fillText(`You Win! \n Press Enter to restart`, 100,200 );
+	      } else {
+	        this.ctx.fillText(`Game Over \n Press Enter to restart`, 100,200 );
+	      }
 	      key('enter', ()=>{
 	        this.game = new Game();
 	        this.start();
@@ -143,12 +147,12 @@
 	  ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
 	  let that = this;
 	  img.onload = function () {
-	    if(!that.lose()) {
+	    if(!that.lose() && !that.win()) {
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
 	  heart.onload = function () {
-	    if(!that.lose()) {
+	    if(!that.lose() && !that.win()) {
 	      ctx.drawImage(heart, 0,0);
 	    }
 	  }
@@ -209,6 +213,14 @@
 	  } else {
 	    return false;
 	  };
+	}
+
+	Game.prototype.win = function() {
+	  if (this.asteroids.length === 0) {
+	    return true;
+	  } else {
+	    return false;
+	  }
 	}
 
 	Game.prototype.addAsteroids = function(fragment = null, respawnPos = null) {
@@ -322,7 +334,7 @@
 	  const img = new Image();
 	  let that = this
 	   img.onload = function () {
-	    if(!that.game.lose()) {
+	    if(!that.game.lose() && !that.game.win()) {
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
@@ -336,7 +348,7 @@
 	    const img = new Image();
 	    let that = this
 	   img.onload = function () {
-	    if(!that.game.lose()) {
+	    if(!that.game.lose() && !that.game.win()) {
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
@@ -539,7 +551,7 @@
 	  const img = new Image();
 	  let that = this
 	  img.onload = function () {
-	    if(!that.game.lose()) {
+	    if(!that.game.lose() && !that.game.win()) {
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
@@ -592,7 +604,7 @@
 	  const img = new Image();
 	  let that = this;
 	  img.onload = function () {
-	    if(!that.game.lose()) {
+	    if(!that.game.lose() && !that.game.win()) {
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
