@@ -127,6 +127,7 @@
 
 	const Asteroid = __webpack_require__(3);
 	const Ship = __webpack_require__(6);
+	const PowerUp = __webpack_require__(8);
 	const img = new Image();
 	const heart = new Image();
 
@@ -134,8 +135,10 @@
 	  this.asteroids = [];
 	  this.addAsteroids();
 	  this.ship = new Ship({pos: this.randomPosition(), game: this});
+	  this.powerup = new PowerUp({game: this});
 	  this.bullets = [];
 	  this.lives = 3;
+	  this.powerups = 0;
 	}
 
 	Game.DIM_X = 800;
@@ -153,7 +156,7 @@
 	  };
 	  heart.onload = function () {
 	    if(!that.lose() && !that.win()) {
-	      ctx.drawImage(heart, 0,0);
+	      ctx.drawImage(heart, 0, 0);
 	    }
 	  }
 	  heart.src = 'heart.png';
@@ -271,8 +274,9 @@
 	  this.checkCollisions();
 	};
 
+
 	Game.prototype.allObjects = function () {
-	  return this.asteroids.concat([this.ship]).concat(this.bullets);
+	  return this.asteroids.concat([this.ship]).concat(this.bullets).concat(this.powerup);
 	};
 
 
@@ -379,6 +383,12 @@
 	  randomVec: function() {
 	    let x = Math.floor(Math.random() * 2 ) + 1;
 	    let y = Math.floor(Math.random() * 2 ) + 1;
+	    return [x,y];
+	  },
+
+	  randomPos: function() {
+	    let x = Math.floor(Math.random() * 600 ) + 1
+	    let y= Math.floor(Math.random() * 600 ) + 1
 	    return [x,y];
 	  },
 
@@ -615,6 +625,54 @@
 
 	module.exports = Bullet;
 
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	const Utils = __webpack_require__(4);
+	const MovingObject = __webpack_require__(5);
+
+	function PowerUp(posOptions) {
+	    let options = {
+	      game: posOptions['game'], 
+	      radius: 15, 
+	      justSpawned: false,
+	      vel: Utils.randomVec(), 
+	      pos: Utils.randomPos(), 
+	      type: Utils.randomNum(), 
+	      wrappable: true, 
+	      angle: 0
+	    }
+	  MovingObject.call(this, options);
+	}
+
+	Utils.inherits(PowerUp, MovingObject);
+
+	PowerUp.prototype.randomPowerup = function() {
+	  chance = Math.floor(Math.random() * 2) + 1
+	  if (chance === 2 && this.game.powerups < 1) {
+	    this.game.powerups += 1;
+	    return true
+	  } else {
+	    return false;
+	  }
+	}
+
+	PowerUp.prototype.draw = function (ctx) {
+	  const powerup = new Image();
+	  let that = this
+	  powerup.onload = function () {
+	    if(!that.game.lose() && !that.game.win() && this.randomPowerup) {
+	      ctx.drawImage(powerup, 0, 0)
+	    } 
+	  };
+	  powerup.src = 'powerup.png';
+	  ctx.drawImage(powerup, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	};
+
+	module.exports = PowerUp;
 
 /***/ }
 /******/ ]);
