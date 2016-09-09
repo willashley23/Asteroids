@@ -139,6 +139,7 @@
 	  this.bullets = [];
 	  this.lives = 3;
 	  this.powerups = 0;
+	  this.powerupsArr = [this.powerup];
 	}
 
 	Game.DIM_X = 800;
@@ -244,7 +245,6 @@
 	      }
 	};
 
-
 	Game.prototype.checkCollisions = function () {
 	  this.allObjects().forEach( (object1) => {
 	    this.allObjects().forEach( (object2) => {
@@ -269,6 +269,13 @@
 	  }
 	};
 
+	Game.prototype.removePowerUp = function (powerUp) {
+	  let idx = this.powerupsArr.indexOf(powerUp);
+	  if (idx > -1) {
+	    this.powerupsArr.splice(idx, 1);
+	  }
+	};
+
 	Game.prototype.step = function () {
 	  this.moveObjects();
 	  this.checkCollisions();
@@ -276,7 +283,8 @@
 
 
 	Game.prototype.allObjects = function () {
-	  return this.asteroids.concat([this.ship]).concat(this.bullets).concat(this.powerup);
+	  // console.log(this.asteroids.concat([this.ship]).concat(this.bullets).concat(this.powerupsArr))
+	  return this.asteroids.concat([this.ship]).concat(this.bullets).concat(this.powerupsArr);
 	};
 
 
@@ -468,6 +476,7 @@
 	const Utils = __webpack_require__(4);
 	const MovingObject = __webpack_require__(5);
 	const Bullet = __webpack_require__(7);
+	const PowerUp = __webpack_require__(8);
 
 	function Ship(posOptions) {
 	  let options = {
@@ -488,6 +497,12 @@
 	Ship.prototype.relocate = function () {
 	  this.pos = this.game.randomPosition();
 	  this.vel = [0,0];
+	};
+
+	Ship.prototype.collideWith = function(otherObject) {
+	  if (otherObject instanceof PowerUp) {
+	    this.game.removePowerUp(otherObject);
+	  } 
 	};
 
 
@@ -660,6 +675,10 @@
 	  }
 	}
 
+	PowerUp.prototype.collidedWith = function(otherObject) {
+	  console.log("stuff")
+	};
+
 	PowerUp.prototype.draw = function (ctx) {
 	  const powerup = new Image();
 	  let that = this
@@ -671,6 +690,8 @@
 	  powerup.src = 'powerup.png';
 	  ctx.drawImage(powerup, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	};
+
+
 
 	module.exports = PowerUp;
 
