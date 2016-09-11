@@ -317,7 +317,8 @@
 	    vel: Utils.randomVec(), 
 	    wrappable: true, 
 	    type: Utils.randomNum(), 
-	    angle: 0
+	    angle: 0,
+	    hasPowerup: false
 	  }
 	  MovingObject.call(this, options);
 	}
@@ -430,6 +431,7 @@
 	  this.type = options['type'];
 	  this.angle = options['angle'];
 	  this.justSpawned = options['justSpawned'];
+	  this.hasPowerup = options['hasPowerup']
 	}
 
 	MovingObject.prototype.draw = function (ctx) {
@@ -486,7 +488,8 @@
 	    vel: [0,0],
 	    wrappable: true,
 	    type: 0,
-	    angle: 0  
+	    angle: 0,
+	    hasPowerup: false  
 	  } 
 	  MovingObject.call(this, options);
 	  this.facingDir = 0;
@@ -502,9 +505,9 @@
 	Ship.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof PowerUp) {
 	    this.game.removePowerUp(otherObject);
+	    this.hasPowerup = true
 	  } 
 	};
-
 
 	Ship.prototype.fireBullet = function () {
 	  let bulletVel = [0,0]
@@ -574,15 +577,25 @@
 
 	Ship.prototype.draw = function (ctx) {
 	  const img = new Image();
+	  const forceField = new Image();
 	  let that = this
 	  img.onload = function () {
 	    if(!that.game.lose() && !that.game.win()) {
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
+	  forceField.onload = function() {
+	    if(!that.game.lose() && !that.game.win()) {
+	      ctx.drawImage(forceField, 0, 0)
+	    }
+	  };
+	  forceField.src = 'forcefield.png';
 	  img.src = 'galaga_ship.png';
 	  let rotatedShip = this.rotateAndCache(img,this.facingDir)
 	  ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  if (this.hasPowerup) { 
+	    ctx.drawImage(forceField, this.pos[0]-38, this.pos[1]-38);
+	  }
 	};
 
 	module.exports = Ship;
@@ -603,7 +616,8 @@
 	    angle: posOptions['angle'],  
 	    radius: 5, 
 	    wrappable: false, 
-	    type: 0
+	    type: 0,
+	    hasPowerup: false
 	  }
 	  MovingObject.call(this, options);
 	}
@@ -658,7 +672,8 @@
 	      pos: Utils.randomPos(), 
 	      type: Utils.randomNum(), 
 	      wrappable: true, 
-	      angle: 0
+	      angle: 0,
+	      hasPowerup: false
 	    }
 	  MovingObject.call(this, options);
 	}
