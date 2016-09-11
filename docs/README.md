@@ -17,6 +17,7 @@ My recreation of Asteroids will have several features for user interaction:
 
 ## Wireframes
 
+![wireframes](https://github.com/willashley23/Asteroids/blob/master/images/mockup.png)
 
 ## Structure and Technologies
 
