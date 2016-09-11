@@ -510,6 +510,7 @@
 	Ship.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof PowerUp) {
 	    this.game.removePowerUp(otherObject);
+	    this.game.powerups = 0;
 	    this.hasPowerup = true
 	  } 
 	};
@@ -686,8 +687,8 @@
 	Utils.inherits(PowerUp, MovingObject);
 
 	PowerUp.prototype.randomPowerup = function() {
-	  chance = Math.floor(Math.random() * 2) + 1
-	  if (chance === 2 && this.game.powerups < 1) {
+	  chance = Math.floor(Math.random() * 620)
+	  if (chance === 5 && this.game.powerups < 1) {
 	    this.game.powerups += 1;
 	    return true
 	  } else {
@@ -695,20 +696,22 @@
 	  }
 	}
 
-	PowerUp.prototype.collidedWith = function(otherObject) {
-	  console.log("stuff")
-	};
+	// PowerUp.prototype.collidedWith = function(otherObject) {
+	//   console.log("stuff")
+	// };
 
 	PowerUp.prototype.draw = function (ctx) {
 	  const powerup = new Image();
 	  let that = this
 	  powerup.onload = function () {
-	    if(!that.game.lose() && !that.game.win() && this.randomPowerup) {
+	    if(!that.game.lose() && !that.game.win()) {
 	      ctx.drawImage(powerup, 0, 0)
 	    } 
 	  };
 	  powerup.src = 'powerup.png';
-	  ctx.drawImage(powerup, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  if (this.game.powerups > 0 || this.randomPowerup()) { 
+	    ctx.drawImage(powerup, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  }
 	};
 
 
