@@ -328,8 +328,13 @@
 
 	Asteroid.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof Ship) {
-	    otherObject.relocate();
-	    this.game.decreaseLives();
+	    if (otherObject.hasPowerup) {
+	      otherObject.hasPowerup = false
+	      this.game.removeAsteroid(this);
+	    } else {
+	      otherObject.relocate();
+	      this.game.decreaseLives();
+	    }
 	  } else if (otherObject instanceof Bullet) {
 	    if (this.radius === 30 && Utils.fragmentChance() === 1) {
 	      this.game.removeBullet(otherObject);
