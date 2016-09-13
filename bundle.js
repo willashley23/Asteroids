@@ -107,6 +107,10 @@
 	      this.onHomeScreen = false;
 	      document.getElementById('game-header').style.display="none";
 	      document.getElementById('wasd').style.display="none";
+	      document.getElementById('difficulty').style.display="none";
+	      document.getElementById('li1').style.display="none";
+	      document.getElementById('li2').style.display="none";
+	      document.getElementById('li3').style.display="none";
 	    });
 	  } else {
 	    this.game.step();
