@@ -1,0 +1,30 @@
+
+
+#preloaded-font {
+  font-family: '8bit_wonder';
+  opacity:0;
+  height:0;
+  width:0;
+  display:inline-block;
+}
+
+#game-header {
+  font-family: '8bit_wonder';
+  color: white;
+  font-size: 60px;
+  position: absolute;
+  bottom: 500px;
+  left: 155px;
+  font-weight: 100;
+  text-shadow: 0px 0px 60px rgba(164, 204, 244, 0.5), 1px 1px 0px #84B0A0, 2px 2px 0px #84B0A0, 3px 3px 0px #84B0A0, 4px 4px 0px #84B0A0;
+}
+
+@font-face {
+    font-family: '8bit_wonder';
+    src: url('./fonts/8-bit_wonder-webfont.woff') format('woff'),
+         url('./fonts/8-bit_wonder-webfont.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+  
