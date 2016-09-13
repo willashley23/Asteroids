@@ -102,15 +102,11 @@
 	      y = 0;
 	    };
 
-	    // this.ctx.fillStyle = "white";
-	    // this.ctx.font = 64+"px Arial";
-	    // this.ctx.fillText('ASTEROIDS', 100, 200);
 	    requestAnimationFrame(this.animate.bind(this));
 	    key('enter', ()=> {
 	      this.onHomeScreen = false;
-	      // this.game = new Game();
-	      // this.start();
 	      document.getElementById('game-header').style.display="none";
+	      document.getElementById('wasd').style.display="none";
 	    });
 	  } else {
 	    this.game.step();

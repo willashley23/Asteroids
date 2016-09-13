@@ -19,6 +19,13 @@
   text-shadow: 0px 0px 60px rgba(164, 204, 244, 0.5), 1px 1px 0px #84B0A0, 2px 2px 0px #84B0A0, 3px 3px 0px #84B0A0, 4px 4px 0px #84B0A0;
 }
 
+.wasd-img {
+  position: absolute;
+  width: 180px;
+  margin-left: 5%;
+  margin-top: 45%;
+}
+
 @font-face {
     font-family: '8bit_wonder';
     src: url('./fonts/8-bit_wonder-webfont.woff') format('woff'),
