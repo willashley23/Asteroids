@@ -80,20 +80,18 @@
 	};
 
 	GameView.prototype.animate = function(time) {
-
-	    speed += 1;
-	    if (speed >= 605) {
-	      speed = 0;
-	    };
+	  speed += 1;
+	  if (speed >= 605) {
+	    speed = 0;
+	  };
 
 	  if (this.onHomeScreen) {
-
 	    let that = this;
 	    img.onload = function () {
 	      that.ctx.drawImage(img, 0, 0)
 	    };
 	    
-	    img.src = 'space.png';
+	    img.src = 'images/space.png';
 	    let y = 0;
 	    let x = 0;
 	    y += speed;
@@ -119,7 +117,6 @@
 	    key('2', () => {
 	      this.onHomeScreen = false;
 	      Utils.hideHomeScreen();
-	      // difficultySetting = "medium";
 	      this.game = new Game("medium");
 
 	    });
@@ -127,7 +124,6 @@
 	    key('3', () => {
 	      this.onHomeScreen = false;
 	      Utils.hideHomeScreen();
-	      // difficultySetting = "hard";
 	      this.game = new Game("hard");
 	    });
 	  } else {
@@ -158,7 +154,6 @@
 	  }
 	};
 
-
 	GameView.prototype.bindKeyHandlers = function() {
 	  key('d', () => {
 	    this.game.ship.power([2, 0]);
@@ -179,7 +174,6 @@
 
 
 	module.exports = GameView;
-
 
 /***/ },
 /* 2 */
@@ -241,8 +235,8 @@
 	      ctx.drawImage(heart, 0, 0);
 	    }
 	  }
-	  heart.src = 'heart.png';
-	  img.src = 'space.png';
+	  heart.src = 'images/heart.png';
+	  img.src = 'images/space.png';
 	  let y = 0;
 	  let x = 0;
 	  let heartPos = 0;
@@ -311,7 +305,7 @@
 	Game.prototype.addAsteroids = function(fragment = null, respawnPos = null) {
 	   if (fragment === null) {
 	     for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
-	        let x = Math.floor(Math.random() * 500 );
+	        let x = Math.floor(Math.random() * 500);
 	        let y = Math.floor(Math.random() * 500);
 	        let asteroid = new Asteroid({game: this, pos: [x, y], radius: 30});
 	        this.asteroids.push(asteroid);
@@ -377,7 +371,6 @@
 
 	module.exports = Game;
 
-
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
@@ -438,9 +431,9 @@
 	    } 
 	  };
 	    if (this.radius === 15) {
-	      img.src = 'smallasteroid1.png';
+	      img.src = 'images/smallasteroid1.png';
 	    } else {
-	      img.src = 'asteroid1.png'
+	      img.src = 'images/asteroid1.png'
 	    }
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  } else {
@@ -452,9 +445,9 @@
 	    } 
 	  };
 	   if (this.radius === 15) {
-	    img.src = 'smallasteroid2.png'
+	    img.src = 'images/smallasteroid2.png'
 	   } else {
-	    img.src = 'asteroid2.png';
+	    img.src = 'images/asteroid2.png';
 	   }
 	  ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  }
@@ -706,8 +699,8 @@
 	      ctx.drawImage(forceField, 0, 0)
 	    }
 	  };
-	  forceField.src = 'forcefield.png';
-	  img.src = 'galaga_ship.png';
+	  forceField.src = 'images/forcefield.png';
+	  img.src = 'images/galaga_ship.png';
 	  let rotatedShip = this.rotateAndCache(img,this.facingDir)
 	  ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  if (this.hasPowerup) { 
@@ -764,7 +757,7 @@
 	      ctx.drawImage(img, 0, 0)
 	    } 
 	  };
-	  img.src = 'laser.png';
+	  img.src = 'images/laser.png';
 	  let rotatedLaser = this.rotateAndCache(img,this.angle)
 	  ctx.drawImage(rotatedLaser, this.pos[0]-this.radius, this.pos[1]-this.radius)
 	};
@@ -776,22 +769,21 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
 	const Utils = __webpack_require__(4);
 	const MovingObject = __webpack_require__(5);
 
 	function PowerUp(posOptions) {
-	    let options = {
-	      game: posOptions['game'], 
-	      radius: 15, 
-	      justSpawned: false,
-	      vel: Utils.randomVec(), 
-	      pos: Utils.randomPos(), 
-	      type: Utils.randomNum(), 
-	      wrappable: true, 
-	      angle: 0,
-	      hasPowerup: false
-	    }
+	  let options = {
+	    game: posOptions['game'], 
+	    radius: 15, 
+	    justSpawned: false,
+	    vel: Utils.randomVec(), 
+	    pos: Utils.randomPos(), 
+	    type: Utils.randomNum(), 
+	    wrappable: true, 
+	    angle: 0,
+	    hasPowerup: false
+	  }
 	  MovingObject.call(this, options);
 	}
 
@@ -807,10 +799,6 @@
 	  }
 	}
 
-	// PowerUp.prototype.collidedWith = function(otherObject) {
-	//   console.log("stuff")
-	// };
-
 	PowerUp.prototype.draw = function (ctx) {
 	  const powerup = new Image();
 	  let that = this
@@ -819,13 +807,11 @@
 	      ctx.drawImage(powerup, 0, 0)
 	    } 
 	  };
-	  powerup.src = 'powerup.png';
+	  powerup.src = 'images/powerup.png';
 	  if (this.game.powerups > 0 || this.randomPowerup()) { 
 	    ctx.drawImage(powerup, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  }
 	};
-
-
 
 	module.exports = PowerUp;
 
