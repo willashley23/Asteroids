@@ -29,7 +29,7 @@ h1 {
 .wasd-img {
   position: absolute;
   width: 150px;
-  margin-left: 5%;
+  margin-left: 6%;
   top: 420px;
 }
 
@@ -43,7 +43,7 @@ h2 {
   font-size: 15px;
   top: 400px;
   left: 535px;
-  width: 20%;
+  width: 260px;
 }
 
 li {
@@ -61,6 +61,18 @@ h3 {
   font-size: 14px;
   top: 535px;
   left: 70px;
+}
+
+.github-link {
+  width: 35px;
+  display: inline-block;
+  top: 620px;
+  position: absolute;
+  left: 390px;
+}
+
+.github-img {
+  width: 35px;
 }
 
 .easy {
