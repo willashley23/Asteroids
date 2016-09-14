@@ -60,15 +60,17 @@
 
 	/* globals key */
 	const Game = __webpack_require__(2);
+	const Utils = __webpack_require__(4);
 	const img = new Image();
 	const DIM_X = 800;
 	const DIM_Y = 605;
 	let speed = 1;
+	let difficultySetting = "easy"
 
 
 	function GameView(ctx) {
 	  this.ctx = ctx;
-	  this.game = new Game();
+	  this.game = new Game("easy");
 	  this.onHomeScreen = true;
 	}
 
@@ -105,12 +107,28 @@
 	    requestAnimationFrame(this.animate.bind(this));
 	    key('enter', ()=> {
 	      this.onHomeScreen = false;
-	      document.getElementById('game-header').style.display="none";
-	      document.getElementById('wasd').style.display="none";
-	      document.getElementById('difficulty').style.display="none";
-	      document.getElementById('li1').style.display="none";
-	      document.getElementById('li2').style.display="none";
-	      document.getElementById('li3').style.display="none";
+	      Utils.hideHomeScreen();
+	      
+	    });
+
+	    key('1', () => {
+	      this.onHomeScreen = false;
+	      Utils.hideHomeScreen();
+	    });
+
+	    key('2', () => {
+	      this.onHomeScreen = false;
+	      Utils.hideHomeScreen();
+	      // difficultySetting = "medium";
+	      this.game = new Game("medium");
+
+	    });
+
+	    key('3', () => {
+	      this.onHomeScreen = false;
+	      Utils.hideHomeScreen();
+	      // difficultySetting = "hard";
+	      this.game = new Game("hard");
 	    });
 	  } else {
 	    this.game.step();
@@ -120,13 +138,17 @@
 	    }
 	    else {
 	    this.ctx.fillStyle = "white";
-	    this.ctx.font = "italic "+24+"pt 8bit_wonder";
+	    this.ctx.font = "italic "+24+"pt Arial";
 	    that = this;
 	      if(this.game.win()){
-	        that.ctx.fillText(`You Win! \n Press Enter to restart`, 100, 200);
+	        document.getElementById('game-header').innerHTML = "You Win";
+	        document.getElementById('game-header').style.left = "235px";
+	        Utils.revealHTML();
+	        new Audio('sounds/victory.wav').play();
 	      } else {
-	        console.log(speed)
-	        that.ctx.fillText(`Game Over \n Press Enter to restart`, 100, 200);
+	        document.getElementById('game-header').innerHTML = "GAME OVER";
+	        Utils.revealHTML();
+	        new Audio('sounds/loss.wav').play();
 	      }
 	      key('enter', ()=>{
 	        this.game = new Game();
@@ -169,7 +191,9 @@
 	const img = new Image();
 	const heart = new Image();
 
-	function Game() {
+	function Game(difficulty) {
+	  this.difficultySetting = difficulty;
+	  this.setAsteroidCount(this.difficultySetting);
 	  this.asteroids = [];
 	  this.addAsteroids();
 	  this.ship = new Ship({pos: this.randomPosition(), game: this});
@@ -184,6 +208,24 @@
 	Game.DIM_Y = 605;
 	Game.NUM_ASTEROIDS = 5;
 
+	Game.prototype.setAsteroidCount = function (difficulty) {
+	  switch (difficulty) {
+	    case "easy":
+	      Game.NUM_ASTEROIDS = 5;
+	      break;
+
+	    case "medium": 
+	      Game.NUM_ASTEROIDS = 7;
+	      break;
+
+	    case "hard":
+	      Game.NUM_ASTEROIDS = 10;
+	      break;
+
+	    default:
+	      Game.NUM_ASTEROIDS = 5;
+	  }
+	}
 
 	Game.prototype.draw = function(ctx, speed) {
 	  
@@ -352,7 +394,7 @@
 	    pos: posOptions['pos'], 
 	    radius: posOptions['radius'], 
 	    justSpawned: posOptions['justSpawned'],
-	    vel: Utils.randomVec(), 
+	    vel: Utils.randomVec(posOptions['game'].difficultySetting), 
 	    wrappable: true, 
 	    type: Utils.randomNum(), 
 	    angle: 0,
@@ -371,10 +413,11 @@
 	      this.game.removeAsteroid(this);
 	    } else {
 	      otherObject.relocate();
+	      new Audio('sounds/hit.wav').play();
 	      this.game.decreaseLives();
 	    }
 	  } else if (otherObject instanceof Bullet) {
-	    if (this.radius === 30 && Utils.fragmentChance() === 1) {
+	    if (this.radius === 30 && Utils.fragmentChance(this.game.difficultySetting) === 1) {
 	      this.game.removeBullet(otherObject);
 	      currPos = this.pos
 	      this.game.addAsteroids(true, [this.pos[0],this.pos[1]]);
@@ -432,9 +475,16 @@
 	    childClass.prototype.constructor = childClass;
 	  },
 
-	  randomVec: function() {
-	    let x = Math.floor(Math.random() * 2 ) + 1;
-	    let y = Math.floor(Math.random() * 2 ) + 1;
+	  randomVec: function(difficulty = "easy") {
+	    let x;
+	    let y;
+	    if (difficulty === "hard") {
+	      x = Math.floor(Math.random() * 4 ) + 1;
+	      y = Math.floor(Math.random() * 4 ) + 1;
+	    } else {
+	      x = Math.floor(Math.random() * 2 ) + 1;
+	      y = Math.floor(Math.random() * 2 ) + 1;
+	    }
 	    return [x,y];
 	  },
 
@@ -449,9 +499,30 @@
 	    return num;
 	  },
 
-	  fragmentChance: function() {
-	    let num = Math.floor(Math.random() * 3) + 1
+	  fragmentChance: function(difficulty = "easy") {
+	    let num;
+	    if (difficulty === "hard") {
+	      num = Math.floor(Math.random() * 2) + 1
+	    } else {
+	     num = Math.floor(Math.random() * 3) + 1    
+	    }
 	    return num
+	  },
+
+	  hideHomeScreen: function() {
+	    document.getElementById('game-header').style.display="none";
+	    document.getElementById('wasd').style.display="none";
+	    document.getElementById('difficulty').style.display="none";
+	    document.getElementById('li1').style.display="none";
+	    document.getElementById('li2').style.display="none";
+	    document.getElementById('li3').style.display="none";
+	    document.getElementById('controls').style.display="none";
+	    document.getElementById('sub-controls').style.display="none";
+	  },
+
+	  revealHTML: function() {
+	    document.getElementById('game-header').style.display = "block";
+	    document.getElementById('game-end').style.display = "block";
 	  }
 
 	};
@@ -550,6 +621,7 @@
 	    this.game.removePowerUp(otherObject);
 	    this.game.powerups = 0;
 	    this.hasPowerup = true
+	    new Audio('sounds/powerup.wav').play();
 	  } 
 	};
 
@@ -571,6 +643,7 @@
 	    angle: this.facingDir
 	  });
 	  this.game.bullets.push(bullet);
+	  new Audio('sounds/laser.wav').play();
 	};
 
 	  

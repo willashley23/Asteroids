@@ -8,7 +8,7 @@
   display:inline-block;
 }
 
-#game-header {
+h1 {
   font-family: '8bit_wonder';
   color: white;
   font-size: 60px;
@@ -19,14 +19,21 @@
   text-shadow: 0px 0px 60px rgba(164, 204, 244, 0.5), 1px 1px 0px #84B0A0, 2px 2px 0px #84B0A0, 3px 3px 0px #84B0A0, 4px 4px 0px #84B0A0;
 }
 
-.wasd-img {
-  position: absolute;
-  width: 180px;
-  margin-left: 5%;
-  top: 400px;
+#game-end {
+  font-size: 38px;
+  left: 105px;
+  bottom: 450px;
+  display: none;
 }
 
-h2, li {
+.wasd-img {
+  position: absolute;
+  width: 150px;
+  margin-left: 5%;
+  top: 420px;
+}
+
+h2, h3, li {
   font-family: '8bit_wonder';
   position: absolute;
   color: white;
@@ -44,6 +51,16 @@ li {
   top: -170px;
   left: 520px;
   position: relative;
+}
+
+#controls {
+  left: 100px
+}
+
+h3 {
+  font-size: 14px;
+  top: 535px;
+  left: 70px;
 }
 
 .easy {
