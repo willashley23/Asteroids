@@ -1,10 +1,12 @@
 ![asteroids](https://github.com/willashley23/Asteroids/blob/master/images/screenshot1.png)
 
+*Live link - www.willashley.io/Asteroids/*
+
 ## Background
 
 My recreation of the classic Atari game utilizes vanillia JavaScript and DOM manipulation along with the Canvas API to simulate a retro gaming experience. 
 
-## Screenshots
+## Screenshot
 
 ![screenshots](https://github.com/willashley23/Asteroids/blob/master/images/screenshot2.png)
 
