@@ -417,7 +417,11 @@
 			  this.game.removeAsteroid(this);
 	    } else {
 	      this.game.removeAsteroid(this);
-	    }
+	    } if (this.radius === 30) {
+	        new Audio('sounds/explosion.wav').play();
+	      } else {
+	        new Audio('sounds/explosionsmall.wav').play();
+	      }
 		}
 	};
 	  
@@ -612,9 +616,9 @@
 	Ship.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof PowerUp) {
 	    this.game.removePowerUp(otherObject);
+	    new Audio('sounds/powerup.wav').play();
 	    this.game.powerups = 0;
 	    this.hasPowerup = true
-	    new Audio('sounds/powerup.wav').play();
 	  } 
 	};
 
