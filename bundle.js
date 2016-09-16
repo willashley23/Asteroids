@@ -303,21 +303,21 @@
 	}
 
 	Game.prototype.addAsteroids = function(fragment = null, respawnPos = null) {
-	   if (fragment === null) {
-	     for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
-	        let x = Math.floor(Math.random() * 500);
-	        let y = Math.floor(Math.random() * 500);
-	        let asteroid = new Asteroid({game: this, pos: [x, y], radius: 30});
-	        this.asteroids.push(asteroid);
-	        } 
-	    } else {
-	         for (let i = 0; i < 3; i++) {
-	            let x = respawnPos[0]; 
-	            let y = respawnPos[1];
-	            let asteroid = new Asteroid({game: this, pos: [x, y], radius: 15, justSpawned: true})
-	            this.asteroids.push(asteroid)
-	         }
+	  if (fragment === null) {
+	    for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
+	      let x = Math.floor(Math.random() * 500);
+	      let y = Math.floor(Math.random() * 500);
+	      let asteroid = new Asteroid({game: this, pos: [x, y], radius: 30});
+	      this.asteroids.push(asteroid);
+	    } 
+	  } else {
+	      for (let i = 0; i < 3; i++) {
+	        let x = respawnPos[0]; 
+	        let y = respawnPos[1];
+	        let asteroid = new Asteroid({game: this, pos: [x, y], radius: 15, justSpawned: true})
+	        this.asteroids.push(asteroid)
 	      }
+	    }
 	};
 
 	Game.prototype.checkCollisions = function () {
@@ -601,7 +601,9 @@
 	    type: 0,
 	    angle: 0,
 	    hasPowerup: false  
-	  } 
+	  }
+	  this.hasTripleShot = false;
+	  this.currentNumBullets = 0;
 	  MovingObject.call(this, options);
 	  this.facingDir = 0;
 	}
@@ -615,10 +617,16 @@
 
 	Ship.prototype.collideWith = function(otherObject) {
 	  if (otherObject instanceof PowerUp) {
+	    if (otherObject.powerupType === 2) {
+	      this.hasTripleShot = true;
+	      this.currentNumBullets = this.game.bullets.length;
+	      new Audio('sounds/tripleshot.wav').play();
+	    } else {
+	      this.hasPowerup = true;
+	      new Audio('sounds/powerup.wav').play();
+	    }
 	    this.game.removePowerUp(otherObject);
-	    new Audio('sounds/powerup.wav').play();
 	    this.game.powerups = 0;
-	    this.hasPowerup = true
 	  } 
 	};
 
@@ -633,13 +641,52 @@
 	  } else {
 	    bulletVel = [0,-10]
 	  }
-	  let bullet = new Bullet( {
-	    pos: this.pos, 
+	  if (this.hasTripleShot) {
+	    let totalBullets = this.game.bullets.length;
+	    let secondBulletPos;
+	    let thirdBulletPos;
+	    if (totalBullets - this.currentNumBullets > 80) {
+	      this.hasTripleShot = false;
+	    }
+	    if (this.facingDir > 3 || this.facingDir === 0) {
+	      secondBulletPos = [this.pos[0]-30, this.pos[1]]
+	      thirdBulletPos = [this.pos[0]+30, this.pos[1]]
+	    } else {
+	      secondBulletPos = [this.pos[0], this.pos[1]-30]
+	      thirdBulletPos = [this.pos[0], this.pos[1]+30]
+	    }
+	    let bullet1 = new Bullet( {
+	      pos: secondBulletPos, 
+	      vel: bulletVel, 
+	      game: this.game, 
+	      angle: this.facingDir
+	    });
+	    let bullet2 = new Bullet( {
+	      pos: thirdBulletPos, 
+	      vel: bulletVel, 
+	      game: this.game, 
+	      angle: this.facingDir
+	    });
+	    this.game.bullets.push(bullet1);
+	    this.game.bullets.push(bullet2);
+	  }
+	  let defaultBulletPos;
+	  console.log(this.facingDir)
+	  if (this.facingDir === 0) {
+	    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]-33]
+	  } else if (this.facingDir > 3) {
+	    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]+33]
+	    }
+	  else {
+	    defaultBulletPos = [this.pos[0], this.pos[1]-3]
+	  }
+	  let bullet3 = new Bullet( {
+	    pos: defaultBulletPos, 
 	    vel: bulletVel, 
 	    game: this.game, 
 	    angle: this.facingDir
 	  });
-	  this.game.bullets.push(bullet);
+	  this.game.bullets.push(bullet3);
 	  new Audio('sounds/laser.wav').play();
 	};
 
@@ -788,13 +835,14 @@
 	    angle: 0,
 	    hasPowerup: false
 	  }
+	  this.powerupType = Math.floor(Math.random() * 2) + 1;
 	  MovingObject.call(this, options);
 	}
 
 	Utils.inherits(PowerUp, MovingObject);
 
 	PowerUp.prototype.randomPowerup = function() {
-	  chance = Math.floor(Math.random() * 620)
+	  chance = Math.floor(Math.random() * 320)
 	  if (chance === 5 && this.game.powerups < 1) {
 	    this.game.powerups += 1;
 	    return true
@@ -811,7 +859,11 @@
 	      ctx.drawImage(powerup, 0, 0)
 	    } 
 	  };
-	  powerup.src = 'images/powerup.png';
+	  if (this.powerupType === 1) {
+	    powerup.src = 'images/powerup.png'
+	  } else {
+	    powerup.src = 'images/tripleshot.png'
+	  }
 	  if (this.game.powerups > 0 || this.randomPowerup()) { 
 	    ctx.drawImage(powerup, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  }
