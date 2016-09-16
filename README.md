@@ -2,6 +2,8 @@
 
 *Live link - www.willashley.io/Asteroids/*
 
+**NOTE** –  Due to Firefox's poor handling of HTML5 Canvas, it is strongly recommended that you play the game in Chrome.
+
 ## Background
 
 My recreation of the classic Atari game utilizes vanillia JavaScript and DOM manipulation along with the Canvas API to simulate a retro gaming experience. 
@@ -26,7 +28,7 @@ The project's main classes will be as follows:
 
 `moving_object.js` : The super class from which asteroids, lasers, ship, and powerups inherit. 
 
-`utils.js` : A collection of methods used for handling various mathematical computations in the game, such as RNG (for calculating the chance an asteroid will fragment upon being hit, or the spawn of a powerup). Utils also handles several tweaks to the game depending on the `difficulty` passed in.
+`utils.js` : A collection of methods used for handling various mathematical computations in the game, such as RNG (for calculating the chance an asteroid will fragment upon being hit, or the spawn of a powerup). Utils also handles several tweaks to the game depending on the `difficulty` passed in. Utils is also where prototypal inheritance occurs thorugh the `inherits` method using surrogates. 
 
 
 ## Future Directions 
