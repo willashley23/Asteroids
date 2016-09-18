@@ -416,6 +416,7 @@
 	      this.game.addAsteroids(true, [this.pos[0],this.pos[1]]);
 			  this.game.removeAsteroid(this);
 	    } else {
+	      this.game.removeBullet(otherObject);
 	      this.game.removeAsteroid(this);
 	    } if (this.radius === 30) {
 	        new Audio('sounds/explosion.wav').play();
@@ -504,6 +505,21 @@
 	     num = Math.floor(Math.random() * 3) + 1    
 	    }
 	    return num
+	  },
+
+	  rotateAndCache: function(image, angle) {
+	    let offscreenCanvas = document.createElement('canvas');
+	    let offscreenCtx = offscreenCanvas.getContext('2d');
+
+	    let size = Math.max(image.width, image.height);
+	    offscreenCanvas.width = size;
+	    offscreenCanvas.height = size;
+
+	    offscreenCtx.translate(size/2, size/2);
+	    offscreenCtx.rotate(angle);
+	    offscreenCtx.drawImage(image, -(image.width/2), -(image.height/2));
+
+	    return offscreenCanvas;
 	  },
 
 	  hideHomeScreen: function() {
@@ -631,16 +647,8 @@
 	};
 
 	Ship.prototype.fireBullet = function () {
-	  let bulletVel = [0,0]
-	  if (this.facingDir > 1.4 && this.facingDir < 2) {
-	    bulletVel = [10,0]
-	  } else if (this.facingDir < 0) {
-	    bulletVel = [-10,0]
-	  } else if (this.facingDir > 2) {
-	    bulletVel = [0,10]
-	  } else {
-	    bulletVel = [0,-10]
-	  }
+	  let bulletVel = [Math.sin(-this.facingDir)*-10, Math.cos(-this.facingDir)*-10]
+	  console.log(bulletVel)
 	  if (this.hasTripleShot) {
 	    let totalBullets = this.game.bullets.length;
 	    let secondBulletPos;
@@ -648,10 +656,11 @@
 	    if (totalBullets - this.currentNumBullets > 80) {
 	      this.hasTripleShot = false;
 	    }
-	    if (this.facingDir > 3 || this.facingDir === 0) {
+	    if (Math.abs(this.facingDir) > 3 || Math.round(this.facingDir) === 0) {
 	      secondBulletPos = [this.pos[0]-30, this.pos[1]]
 	      thirdBulletPos = [this.pos[0]+30, this.pos[1]]
 	    } else {
+	      console.log(this.facingDir)
 	      secondBulletPos = [this.pos[0], this.pos[1]-30]
 	      thirdBulletPos = [this.pos[0], this.pos[1]+30]
 	    }
@@ -671,14 +680,13 @@
 	    this.game.bullets.push(bullet2);
 	  }
 	  let defaultBulletPos;
-	  console.log(this.facingDir)
 	  if (this.facingDir === 0) {
-	    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]-33]
+	    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]-36]
 	  } else if (this.facingDir > 3) {
-	    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]+33]
+	    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]+36]
 	    }
 	  else {
-	    defaultBulletPos = [this.pos[0], this.pos[1]-3]
+	    defaultBulletPos = [this.pos[0], this.pos[1]-6]
 	  }
 	  let bullet3 = new Bullet( {
 	    pos: defaultBulletPos, 
@@ -690,18 +698,10 @@
 	  new Audio('sounds/laser.wav').play();
 	};
 
-	  
 	Ship.prototype.power = function (impulse) {
 	  this.vel[0] += impulse[0];
 	  this.vel[1] += impulse[1];
-
-	  // Calculate angle of ship
-	  let dest = [(this.pos[0]+impulse[0]),[(this.pos[1]+impulse[1])]];
-	  let targetX = dest[0];
-	  let targetY = dest[1];
-	  let tx = targetX - this.pos[0]
-	  let ty = targetY - this.pos[1]
-	  let radians = Math.atan2(-tx,-ty) * -1;
+	  let radians = Math.atan2(-this.vel[0], -this.vel[1]) * -1;
 	  this.facingDir = radians;
 	};
 
@@ -711,30 +711,10 @@
 	  }
 	  this.pos[0] += this.vel[0];
 	  this.pos[1] += this.vel[1];
-	  // Attenuate velocity over time
+	  //Attenuate velocity over time
 	  this.vel[0] *= .98;
 	  this.vel[1] *= .98;
 	};
-
-	Ship.prototype.convertToRadians = function(degree) {
-	  return degree*(Math.PI/180);
-	}
-
-	// Draw ship on seperate canvas in order to rotate
-	Ship.prototype.rotateAndCache = function(image,angle) {
-	  let offscreenCanvas = document.createElement('canvas');
-	  let offscreenCtx = offscreenCanvas.getContext('2d');
-
-	  let size = Math.max(image.width, image.height);
-	  offscreenCanvas.width = size;
-	  offscreenCanvas.height = size;
-
-	  offscreenCtx.translate(size/2, size/2);
-	  offscreenCtx.rotate(angle);
-	  offscreenCtx.drawImage(image, -(image.width/2), -(image.height/2));
-
-	  return offscreenCanvas;
-	}
 
 	Ship.prototype.draw = function (ctx) {
 	  const img = new Image();
@@ -752,7 +732,7 @@
 	  };
 	  forceField.src = 'images/forcefield.png';
 	  img.src = 'images/galaga_ship.png';
-	  let rotatedShip = this.rotateAndCache(img,this.facingDir)
+	  let rotatedShip = Utils.rotateAndCache(img,this.facingDir)
 	  ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
 	  if (this.hasPowerup) { 
 	    ctx.drawImage(forceField, this.pos[0]-38, this.pos[1]-38);
@@ -784,22 +764,6 @@
 	}
 	Utils.inherits(Bullet, MovingObject);
 
-
-	Bullet.prototype.rotateAndCache = function(image, angle) {
-	  let offscreenCanvas = document.createElement('canvas');
-	  let offscreenCtx = offscreenCanvas.getContext('2d');
-
-	  let size = Math.max(image.width, image.height);
-	  offscreenCanvas.width = size;
-	  offscreenCanvas.height = size;
-
-	  offscreenCtx.translate(size/2, size/2);
-	  offscreenCtx.rotate(angle);
-	  offscreenCtx.drawImage(image, -(image.width/2), -(image.height/2));
-
-	  return offscreenCanvas;
-	}
-
 	Bullet.prototype.draw = function (ctx) {
 	  const img = new Image();
 	  let that = this;
@@ -809,7 +773,7 @@
 	    } 
 	  };
 	  img.src = 'images/laser.png';
-	  let rotatedLaser = this.rotateAndCache(img,this.angle)
+	  let rotatedLaser = Utils.rotateAndCache(img, this.angle)
 	  ctx.drawImage(rotatedLaser, this.pos[0]-this.radius, this.pos[1]-this.radius)
 	};
 
