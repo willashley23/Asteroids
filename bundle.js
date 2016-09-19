@@ -196,8 +196,8 @@
 	  this.lives = 3;
 	  this.powerups = 0;
 	  this.powerupsArr = [this.powerup];
+	  // Start game with 2 seconds of invulnerability
 	}
-
 	Game.DIM_X = 800;
 	Game.DIM_Y = 605;
 	Game.NUM_ASTEROIDS = 5;
@@ -400,7 +400,8 @@
 
 
 	Asteroid.prototype.collideWith = function(otherObject) {
-	  if (otherObject instanceof Ship) {
+	console.log(this.game.safeSpawn)
+	  if (otherObject instanceof Ship && !otherObject.invulnerable) {
 	    if (otherObject.hasPowerup) {
 	      otherObject.hasPowerup = false
 	      this.game.removeAsteroid(this);
@@ -620,6 +621,7 @@
 	  }
 	  this.hasTripleShot = false;
 	  this.currentNumBullets = 0;
+	  this.invulnerable = false;
 	  MovingObject.call(this, options);
 	  this.facingDir = 0;
 	}
@@ -627,8 +629,13 @@
 	Utils.inherits(Ship, MovingObject);
 
 	Ship.prototype.relocate = function () {
+	  this.invulnerable = true
 	  this.pos = this.game.randomPosition();
 	  this.vel = [0,0];
+	  let that = this;
+	  window.setTimeout( function () {
+	    that.invulnerable = false;
+	  }, 1500);
 	};
 
 	Ship.prototype.collideWith = function(otherObject) {
@@ -648,7 +655,6 @@
 
 	Ship.prototype.fireBullet = function () {
 	  let bulletVel = [Math.sin(-this.facingDir)*-10, Math.cos(-this.facingDir)*-10]
-	  console.log(bulletVel)
 	  if (this.hasTripleShot) {
 	    let totalBullets = this.game.bullets.length;
 	    let secondBulletPos;
@@ -660,7 +666,6 @@
 	      secondBulletPos = [this.pos[0]-30, this.pos[1]]
 	      thirdBulletPos = [this.pos[0]+30, this.pos[1]]
 	    } else {
-	      console.log(this.facingDir)
 	      secondBulletPos = [this.pos[0], this.pos[1]-30]
 	      thirdBulletPos = [this.pos[0], this.pos[1]+30]
 	    }
@@ -733,7 +738,10 @@
 	  forceField.src = 'images/forcefield.png';
 	  img.src = 'images/galaga_ship.png';
 	  let rotatedShip = Utils.rotateAndCache(img,this.facingDir)
-	  ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  // Blink sprite to indicate invulnerabiltiy 
+	  if (!this.invulnerable || Math.floor(Date.now() / 60) % 2) {
+	   ctx.drawImage(rotatedShip, this.pos[0]-this.radius, this.pos[1]-this.radius);
+	  } 
 	  if (this.hasPowerup) { 
 	    ctx.drawImage(forceField, this.pos[0]-38, this.pos[1]-38);
 	  }

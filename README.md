@@ -30,9 +30,29 @@ The project's main classes will be as follows:
 
 `utils.js` : A collection of methods used for handling various mathematical computations in the game, such as RNG (for calculating the chance an asteroid will fragment upon being hit, or the spawn of a powerup). Utils also handles several tweaks to the game depending on the `difficulty` passed in. Utils is also where prototypal inheritance occurs thorugh the `inherits` method using surrogates. 
 
+## Dual Canvas
+
+Asteroids uses a second Canvas invisible to the player in order to rotate the ship without disrupting the main canvas. The ship is rotated on the second canvas, the rotated sprite is cached, returned, and then redrawn on the original canvas:
+
+```
+rotateAndCache: function(image, angle) {
+    let offscreenCanvas = document.createElement('canvas');
+    let offscreenCtx = offscreenCanvas.getContext('2d');
+
+    let size = Math.max(image.width, image.height);
+    offscreenCanvas.width = size;
+    offscreenCanvas.height = size;
+
+    offscreenCtx.translate(size/2, size/2);
+    offscreenCtx.rotate(angle);
+    offscreenCtx.drawImage(image, -(image.width/2), -(image.height/2));
+
+    return offscreenCanvas;
+  }
+
+  ```
 
 ## Future Directions 
 
 - Black holes: swirling vortices that require unique usage of the game's `vector` functions that will 'draw in' any ship foolish enough to get close to it, resulting an an automatic loss. 
 - Endless Mode: allow for an endless barrage of asteroids and a score counter in the upper right corner.
-- Safe Respawn: Give ship 1.5 seconds of invulnerabiltiy after respawning.
