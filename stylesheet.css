@@ -87,6 +87,10 @@ h3 {
   text-shadow: 0px 0px 60px rgba(164, 204, 244, 0.5), 1px 1px 0px #800000, 1px 1px 0px #800000, 3px 3px 0px #800000, 3px 3px 0px #800000;
 }
 
+#li4 {
+  text-shadow: 0px 0px 60px rgba(164, 204, 244, 0.5), 1px 1px 0px red, 1px 1px 0px red, 3px 3px 0px red, 3px 3px 0px red;
+}
+
 ul {
   position: absolute;
 }

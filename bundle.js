@@ -105,8 +105,7 @@
 	    requestAnimationFrame(this.animate.bind(this));
 	    key('enter', ()=> {
 	      this.onHomeScreen = false;
-	      Utils.hideHomeScreen();
-	      
+	      Utils.hideHomeScreen(); 
 	    });
 
 	    key('1', () => {
@@ -118,13 +117,18 @@
 	      this.onHomeScreen = false;
 	      Utils.hideHomeScreen();
 	      this.game = new Game("medium");
-
 	    });
 
 	    key('3', () => {
 	      this.onHomeScreen = false;
 	      Utils.hideHomeScreen();
 	      this.game = new Game("hard");
+	    });
+
+	    key('4', () => {
+	      this.onHomeScreen = false;
+	      Utils.hideHomeScreen();
+	      this.game = new Game("endless");
 	    });
 	  } else {
 	    this.game.step();
@@ -302,8 +306,15 @@
 	  }
 	}
 
-	Game.prototype.addAsteroids = function(fragment = null, respawnPos = null) {
-	  if (fragment === null) {
+	Game.prototype.addAsteroids = function(fragment = null, respawnPos = null, endlessMode = false) {
+	  if (endlessMode) {
+	    console.log(this.asteroids.length)
+	    for (let j = 0; j < 5; j++) {
+	      let y = Math.floor(Math.random() * 500);
+	      let asteroid = new Asteroid({game: this, pos: [800, y], radius: 30});
+	      this.asteroids.push(asteroid);   
+	    }
+	  } else if (fragment === null) {
 	    for (let i = 0; i < Game.NUM_ASTEROIDS; i++) {
 	      let x = Math.floor(Math.random() * 500);
 	      let y = Math.floor(Math.random() * 500);
@@ -354,20 +365,20 @@
 	Game.prototype.step = function () {
 	  this.moveObjects();
 	  this.checkCollisions();
+	  if (this.difficultySetting === "endless" && this.asteroids.length < 5) {
+	    this.addAsteroids(null, null, true);
+	  }
 	};
-
 
 	Game.prototype.allObjects = function () {
 	  return this.asteroids.concat([this.ship]).concat(this.bullets).concat(this.powerupsArr);
 	};
-
 
 	Game.prototype.randomPosition = function () {
 	  let x = Math.floor(Math.random() * Game.DIM_X);
 	  let y = Math.floor(Math.random() * Game.DIM_Y);
 	  return [x,y];
 	};
-
 
 	module.exports = Game;
 
@@ -400,7 +411,6 @@
 
 
 	Asteroid.prototype.collideWith = function(otherObject) {
-	console.log(this.game.safeSpawn)
 	  if (otherObject instanceof Ship && !otherObject.invulnerable) {
 	    if (otherObject.hasPowerup) {
 	      otherObject.hasPowerup = false
@@ -477,7 +487,7 @@
 	  randomVec: function(difficulty = "easy") {
 	    let x;
 	    let y;
-	    if (difficulty === "hard") {
+	    if (difficulty === "hard" || difficulty === "endless") {
 	      x = Math.floor(Math.random() * 4 ) + 1;
 	      y = Math.floor(Math.random() * 4 ) + 1;
 	    } else {
@@ -530,6 +540,7 @@
 	    document.getElementById('li1').style.display="none";
 	    document.getElementById('li2').style.display="none";
 	    document.getElementById('li3').style.display="none";
+	    document.getElementById('li4').style.display="none";
 	    document.getElementById('controls').style.display="none";
 	    document.getElementById('sub-controls').style.display="none";
 	  },
