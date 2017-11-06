@@ -72,4 +72,3 @@ rotateAndCache: function(image, angle) {
 ## Future Directions 
 
 - Black holes: swirling vortices that require unique usage of the game's `vector` functions that will 'draw in' any ship foolish enough to get close to it, resulting an an automatic loss. 
-- Endless Mode: allow for an endless barrage of asteroids and a score counter in the upper right corner.
