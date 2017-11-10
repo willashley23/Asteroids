@@ -4,22 +4,30 @@ const Ship = require('./ship.js');
 const Bullet = require('./bullet.js');
 
 
-function Asteroid(posOptions) {
-  let options = {
-    game: posOptions['game'], 
-    pos: posOptions['pos'], 
-    radius: posOptions['radius'], 
-    justSpawned: posOptions['justSpawned'],
-    vel: Utils.randomVec(posOptions['game'].difficultySetting), 
-    wrappable: true, 
-    type: Utils.randomNum(), 
-    angle: 0,
-    hasPowerup: false
+class Asteroid extends MovingObject {
+  constructor(posOptions) {
+      // let options = {
+      //   game: posOptions['game'], 
+      //   pos: posOptions['pos'], 
+      //   radius: posOptions['radius'], 
+      //   justSpawned: posOptions['justSpawned'],
+      //   vel: Utils.randomVec(posOptions['game'].difficultySetting), 
+      //   wrappable: true, 
+      //   type: Utils.randomNum(), 
+      //   angle: 0,
+      //   hasPowerup: false
+      // }
+      super(posOptions);
+      this.angle = 0;
+      this.hasPowerup = false;
+      this.wrappable = true;
+      this.type = Utils.randomNum();
+      this.vel = Utils.randomVec(posOptions['game'.difficultySetting]);
   }
-  MovingObject.call(this, options);
+  //MovingObject.call(this, options);
 }
 
-Utils.inherits(Asteroid, MovingObject);
+//Utils.inherits(Asteroid, MovingObject);
 
 
 Asteroid.prototype.collideWith = function(otherObject) {
@@ -35,7 +43,7 @@ Asteroid.prototype.collideWith = function(otherObject) {
   } else if (otherObject instanceof Bullet) {
     if (this.radius === 30 && Utils.fragmentChance(this.game.difficultySetting) === 1) {
       this.game.removeBullet(otherObject);
-      currPos = this.pos
+      let currPos = this.pos
       this.game.addAsteroids(true, [this.pos[0],this.pos[1]]);
 		  this.game.removeAsteroid(this);
     } else {

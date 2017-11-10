@@ -4,18 +4,20 @@ const PowerUp = require('./powerup.js');
 const img = new Image();
 const heart = new Image();
 
-function Game(difficulty) {
-  this.difficultySetting = difficulty;
-  this.setAsteroidCount(this.difficultySetting);
-  this.asteroids = [];
-  this.addAsteroids();
-  this.ship = new Ship({pos: this.randomPosition(), game: this});
-  this.powerup = new PowerUp({game: this});
-  this.bullets = [];
-  this.lives = 3;
-  this.powerups = 0;
-  this.powerupsArr = [this.powerup];
-  // Start game with 2 seconds of invulnerability
+class Game {
+    constructor(difficulty) {
+        this.difficultySetting = difficulty;
+        this.setAsteroidCount(this.difficultySetting);
+        this.asteroids = [];
+        this.addAsteroids();
+        this.ship = new Ship({pos: this.randomPosition(), game: this});
+        this.powerup = new PowerUp({game: this});
+        this.bullets = [];
+        this.lives = 3;
+        this.powerups = 0;
+        this.powerupsArr = [this.powerup];
+        // Start game with 2 seconds of invulnerability
+    }
 }
 Game.DIM_X = 800;
 Game.DIM_Y = 605;

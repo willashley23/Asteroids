@@ -159,9 +159,13 @@ module.exports = Util;
 "use strict";
 
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 // const Game = require('./game');
 
-function MovingObject(options) {
+var MovingObject = function MovingObject(options) {
+  _classCallCheck(this, MovingObject);
+
   this.game = options['game'];
   this.pos = options['pos'];
   this.vel = options['vel'];
@@ -171,7 +175,7 @@ function MovingObject(options) {
   this.angle = options['angle'];
   this.justSpawned = options['justSpawned'];
   this.hasPowerup = options['hasPowerup'];
-}
+};
 
 MovingObject.prototype.draw = function (ctx) {
   ctx.fillStyle = this.color;
@@ -357,23 +361,45 @@ module.exports = Ship;
 "use strict";
 
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var Utils = __webpack_require__(0);
 var MovingObject = __webpack_require__(1);
 
-function Bullet(posOptions) {
-  var options = {
-    game: posOptions['game'],
-    pos: posOptions['pos'],
-    vel: posOptions['vel'],
-    angle: posOptions['angle'],
-    radius: 5,
-    wrappable: false,
-    type: 0,
-    hasPowerup: false
-  };
-  MovingObject.call(this, options);
-}
-Utils.inherits(Bullet, MovingObject);
+var Bullet = function (_MovingObject) {
+  _inherits(Bullet, _MovingObject);
+
+  function Bullet(posOptions) {
+    _classCallCheck(this, Bullet);
+
+    var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, posOptions));
+
+    _this.radius = 5;
+    _this.wrappable = false;
+    _this.type = 0;
+    _this.hasPowerup = false;
+    return _this;
+  }
+  // let options = { 
+  //   game: posOptions['game'], 
+  //   pos: posOptions['pos'], 
+  //   vel: posOptions['vel'], 
+  //   angle: posOptions['angle'],  
+  //   radius: 5, 
+  //   wrappable: false, 
+  //   type: 0,
+  //   hasPowerup: false
+  // }
+  //MovingObject.call(this, options);
+
+
+  return Bullet;
+}(MovingObject);
+//Utils.inherits(Bullet, MovingObject);
 
 Bullet.prototype.draw = function (ctx) {
   var img = new Image();
@@ -489,125 +515,125 @@ var speed = 1;
 var difficultySetting = "easy";
 
 var GameView = function () {
-  function GameView(ctx) {
-    _classCallCheck(this, GameView);
+    function GameView(ctx) {
+        _classCallCheck(this, GameView);
 
-    this.ctx = ctx;
-    this.game = new Game("easy");
-    this.onHomeScreen = true;
-  }
-
-  _createClass(GameView, [{
-    key: 'start',
-    value: function start(callback) {
-      this.bindKeyHandlers();
-      this.animate(0);
+        this.ctx = ctx;
+        this.game = new Game("easy");
+        this.onHomeScreen = true;
     }
-  }, {
-    key: 'animate',
-    value: function animate(time) {
-      var _this = this;
 
-      speed += 1;
-      if (speed >= 605) {
-        speed = 0;
-      };
-
-      if (this.onHomeScreen) {
-        var _that = this;
-        img.onload = function () {
-          _that.ctx.drawImage(img, 0, 0);
-        };
-
-        img.src = 'images/space.png';
-        var y = 0;
-        var x = 0;
-        y += speed;
-        this.ctx.drawImage(img, x, y);
-        this.ctx.drawImage(img, x, y - DIM_Y);
-
-        if (y >= DIM_Y) {
-          y = 0;
-        };
-
-        requestAnimationFrame(this.animate.bind(this));
-        key('enter', function () {
-          _this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-        });
-
-        key('1', function () {
-          _this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-        });
-
-        key('2', function () {
-          _this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-          _this.game = new Game("medium");
-        });
-
-        key('3', function () {
-          _this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-          _this.game = new Game("hard");
-        });
-
-        key('4', function () {
-          _this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-          _this.game = new Game("endless");
-        });
-      } else {
-        this.game.step();
-        this.game.draw(this.ctx, speed);
-        if (!this.game.lose() && !this.game.win()) {
-          requestAnimationFrame(this.animate.bind(this));
-        } else {
-          this.ctx.fillStyle = "white";
-          this.ctx.font = "italic " + 24 + "pt Arial";
-          that = this;
-          if (this.game.win()) {
-            document.getElementById('game-header').innerHTML = "You Win";
-            document.getElementById('game-header').style.left = "235px";
-            Utils.revealHTML();
-            new Audio('sounds/victory.wav').play();
-          } else {
-            document.getElementById('game-header').innerHTML = "GAME OVER";
-            Utils.revealHTML();
-            new Audio('sounds/loss.wav').play();
-          }
-          key('enter', function () {
-            _this.game = new Game();
-            _this.start();
-          });
+    _createClass(GameView, [{
+        key: 'start',
+        value: function start(callback) {
+            this.bindKeyHandlers();
+            this.animate(0);
         }
-      }
-    }
-  }, {
-    key: 'bindKeyHandlers',
-    value: function bindKeyHandlers() {
-      var _this2 = this;
+    }, {
+        key: 'animate',
+        value: function animate(time) {
+            var _this = this;
 
-      key('d', function () {
-        _this2.game.ship.power([2, 0]);
-      });
-      key('a', function () {
-        _this2.game.ship.power([-2, 0]);
-      });
-      key('s', function () {
-        _this2.game.ship.power([0, 2]);
-      });
-      key('w', function () {
-        _this2.game.ship.power([0, -2]);
-      });
-      key('l', function () {
-        _this2.game.ship.fireBullet();
-      });
-    }
-  }]);
+            speed += 1;
+            if (speed >= 605) {
+                speed = 0;
+            };
 
-  return GameView;
+            if (this.onHomeScreen) {
+                var _that = this;
+                img.onload = function () {
+                    _that.ctx.drawImage(img, 0, 0);
+                };
+
+                img.src = 'images/space.png';
+                var y = 0;
+                var x = 0;
+                y += speed;
+                this.ctx.drawImage(img, x, y);
+                this.ctx.drawImage(img, x, y - DIM_Y);
+
+                if (y >= DIM_Y) {
+                    y = 0;
+                };
+
+                requestAnimationFrame(this.animate.bind(this));
+                key('enter', function () {
+                    _this.onHomeScreen = false;
+                    Utils.hideHomeScreen();
+                });
+
+                key('1', function () {
+                    _this.onHomeScreen = false;
+                    Utils.hideHomeScreen();
+                });
+
+                key('2', function () {
+                    _this.onHomeScreen = false;
+                    Utils.hideHomeScreen();
+                    _this.game = new Game("medium");
+                });
+
+                key('3', function () {
+                    _this.onHomeScreen = false;
+                    Utils.hideHomeScreen();
+                    _this.game = new Game("hard");
+                });
+
+                key('4', function () {
+                    _this.onHomeScreen = false;
+                    Utils.hideHomeScreen();
+                    _this.game = new Game("endless");
+                });
+            } else {
+                this.game.step();
+                this.game.draw(this.ctx, speed);
+                if (!this.game.lose() && !this.game.win()) {
+                    requestAnimationFrame(this.animate.bind(this));
+                } else {
+                    this.ctx.fillStyle = "white";
+                    this.ctx.font = "italic " + 24 + "pt Arial";
+                    that = this;
+                    if (this.game.win()) {
+                        document.getElementById('game-header').innerHTML = "You Win";
+                        document.getElementById('game-header').style.left = "235px";
+                        Utils.revealHTML();
+                        new Audio('sounds/victory.wav').play();
+                    } else {
+                        document.getElementById('game-header').innerHTML = "GAME OVER";
+                        Utils.revealHTML();
+                        new Audio('sounds/loss.wav').play();
+                    }
+                    key('enter', function () {
+                        _this.game = new Game();
+                        _this.start();
+                    });
+                }
+            }
+        }
+    }, {
+        key: 'bindKeyHandlers',
+        value: function bindKeyHandlers() {
+            var _this2 = this;
+
+            key('d', function () {
+                _this2.game.ship.power([2, 0]);
+            });
+            key('a', function () {
+                _this2.game.ship.power([-2, 0]);
+            });
+            key('s', function () {
+                _this2.game.ship.power([0, 2]);
+            });
+            key('w', function () {
+                _this2.game.ship.power([0, -2]);
+            });
+            key('l', function () {
+                _this2.game.ship.fireBullet();
+            });
+        }
+    }]);
+
+    return GameView;
 }();
 
 module.exports = GameView;
@@ -619,13 +645,17 @@ module.exports = GameView;
 "use strict";
 
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var Asteroid = __webpack_require__(8);
 var Ship = __webpack_require__(2);
 var PowerUp = __webpack_require__(4);
 var img = new Image();
 var heart = new Image();
 
-function Game(difficulty) {
+var Game = function Game(difficulty) {
+  _classCallCheck(this, Game);
+
   this.difficultySetting = difficulty;
   this.setAsteroidCount(this.difficultySetting);
   this.asteroids = [];
@@ -637,7 +667,8 @@ function Game(difficulty) {
   this.powerups = 0;
   this.powerupsArr = [this.powerup];
   // Start game with 2 seconds of invulnerability
-}
+};
+
 Game.DIM_X = 800;
 Game.DIM_Y = 605;
 Game.NUM_ASTEROIDS = 5;
@@ -830,27 +861,52 @@ module.exports = Game;
 "use strict";
 
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var Utils = __webpack_require__(0);
 var MovingObject = __webpack_require__(1);
 var Ship = __webpack_require__(2);
 var Bullet = __webpack_require__(3);
 
-function Asteroid(posOptions) {
-  var options = {
-    game: posOptions['game'],
-    pos: posOptions['pos'],
-    radius: posOptions['radius'],
-    justSpawned: posOptions['justSpawned'],
-    vel: Utils.randomVec(posOptions['game'].difficultySetting),
-    wrappable: true,
-    type: Utils.randomNum(),
-    angle: 0,
-    hasPowerup: false
-  };
-  MovingObject.call(this, options);
-}
+var Asteroid = function (_MovingObject) {
+  _inherits(Asteroid, _MovingObject);
 
-Utils.inherits(Asteroid, MovingObject);
+  function Asteroid(posOptions) {
+    _classCallCheck(this, Asteroid);
+
+    var _this = _possibleConstructorReturn(this, (Asteroid.__proto__ || Object.getPrototypeOf(Asteroid)).call(this, posOptions));
+    // let options = {
+    //   game: posOptions['game'], 
+    //   pos: posOptions['pos'], 
+    //   radius: posOptions['radius'], 
+    //   justSpawned: posOptions['justSpawned'],
+    //   vel: Utils.randomVec(posOptions['game'].difficultySetting), 
+    //   wrappable: true, 
+    //   type: Utils.randomNum(), 
+    //   angle: 0,
+    //   hasPowerup: false
+    // }
+
+
+    _this.angle = 0;
+    _this.hasPowerup = false;
+    _this.wrappable = true;
+    _this.type = Utils.randomNum();
+    _this.vel = Utils.randomVec(posOptions['game'.difficultySetting]);
+    return _this;
+  }
+  //MovingObject.call(this, options);
+
+
+  return Asteroid;
+}(MovingObject);
+
+//Utils.inherits(Asteroid, MovingObject);
+
 
 Asteroid.prototype.collideWith = function (otherObject) {
   if (otherObject instanceof Ship && !otherObject.invulnerable) {
@@ -865,7 +921,7 @@ Asteroid.prototype.collideWith = function (otherObject) {
   } else if (otherObject instanceof Bullet) {
     if (this.radius === 30 && Utils.fragmentChance(this.game.difficultySetting) === 1) {
       this.game.removeBullet(otherObject);
-      currPos = this.pos;
+      var currPos = this.pos;
       this.game.addAsteroids(true, [this.pos[0], this.pos[1]]);
       this.game.removeAsteroid(this);
     } else {

@@ -44,56 +44,55 @@ class GameView {
 
         requestAnimationFrame(this.animate.bind(this));
         key('enter', ()=> {
-          this.onHomeScreen = false;
-          Utils.hideHomeScreen(); 
+            this.onHomeScreen = false;
+            Utils.hideHomeScreen(); 
         });
 
         key('1', () => {
-          this.onHomeScreen = false;
-          Utils.hideHomeScreen();
+            this.onHomeScreen = false;
+            Utils.hideHomeScreen();
         });
 
         key('2', () => {
-          this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-          this.game = new Game("medium");
+            this.onHomeScreen = false;
+            Utils.hideHomeScreen();
+            this.game = new Game("medium");
         });
 
         key('3', () => {
-          this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-          this.game = new Game("hard");
+            this.onHomeScreen = false;
+            Utils.hideHomeScreen();
+            this.game = new Game("hard");
         });
 
         key('4', () => {
-          this.onHomeScreen = false;
-          Utils.hideHomeScreen();
-          this.game = new Game("endless");
+            this.onHomeScreen = false;
+            Utils.hideHomeScreen();
+            this.game = new Game("endless");
         });
       } else {
-        this.game.step();
-        this.game.draw(this.ctx, speed);
-        if(!this.game.lose() && !this.game.win()){
-          requestAnimationFrame(this.animate.bind(this));
-        }
-        else {
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "italic "+24+"pt Arial";
-        that = this;
-          if(this.game.win()){
-            document.getElementById('game-header').innerHTML = "You Win";
-            document.getElementById('game-header').style.left = "235px";
-            Utils.revealHTML();
-            new Audio('sounds/victory.wav').play();
-          } else {
-            document.getElementById('game-header').innerHTML = "GAME OVER";
-            Utils.revealHTML();
-            new Audio('sounds/loss.wav').play();
-          }
-          key('enter', ()=>{
-            this.game = new Game();
-            this.start();
-          });
+            this.game.step();
+            this.game.draw(this.ctx, speed);
+            if(!this.game.lose() && !this.game.win()){
+                requestAnimationFrame(this.animate.bind(this));
+        } else {
+            this.ctx.fillStyle = "white";
+            this.ctx.font = "italic "+24+"pt Arial";
+            that = this;
+            if(this.game.win()){
+                document.getElementById('game-header').innerHTML = "You Win";
+                document.getElementById('game-header').style.left = "235px";
+                Utils.revealHTML();
+                new Audio('sounds/victory.wav').play();
+            } else {
+                document.getElementById('game-header').innerHTML = "GAME OVER";
+                Utils.revealHTML();
+                new Audio('sounds/loss.wav').play();
+            }
+                key('enter', ()=>{
+                this.game = new Game();
+                this.start();
+            });
         }
       }
     }

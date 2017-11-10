@@ -1,20 +1,27 @@
 const Utils = require('./utils.js');
 const MovingObject = require('./moving_object.js');
 
-function Bullet(posOptions) {
-  let options = { 
-    game: posOptions['game'], 
-    pos: posOptions['pos'], 
-    vel: posOptions['vel'], 
-    angle: posOptions['angle'],  
-    radius: 5, 
-    wrappable: false, 
-    type: 0,
-    hasPowerup: false
-  }
-  MovingObject.call(this, options);
+class Bullet extends MovingObject {
+    constructor(posOptions) {
+        super(posOptions);
+        this.radius = 5;
+        this.wrappable = false;
+        this.type = 0;
+        this.hasPowerup = false;
+    }
+  // let options = { 
+  //   game: posOptions['game'], 
+  //   pos: posOptions['pos'], 
+  //   vel: posOptions['vel'], 
+  //   angle: posOptions['angle'],  
+  //   radius: 5, 
+  //   wrappable: false, 
+  //   type: 0,
+  //   hasPowerup: false
+  // }
+  //MovingObject.call(this, options);
 }
-Utils.inherits(Bullet, MovingObject);
+//Utils.inherits(Bullet, MovingObject);
 
 Bullet.prototype.draw = function (ctx) {
   const img = new Image();

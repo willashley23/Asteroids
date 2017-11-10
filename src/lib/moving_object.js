@@ -1,15 +1,17 @@
 // const Game = require('./game');
 
-function MovingObject(options) {
-  this.game = options['game'];
-  this.pos = options['pos'];
-  this.vel = options['vel'];
-  this.radius = options['radius'];
-  this.isWrappable = options['wrappable'];
-  this.type = options['type'];
-  this.angle = options['angle'];
-  this.justSpawned = options['justSpawned'];
-  this.hasPowerup = options['hasPowerup']
+class MovingObject {
+    constructor(options) {
+        this.game = options['game'];
+        this.pos = options['pos'];
+        this.vel = options['vel'];
+        this.radius = options['radius'];
+        this.isWrappable = options['wrappable'];
+        this.type = options['type'];
+        this.angle = options['angle'];
+        this.justSpawned = options['justSpawned'];
+        this.hasPowerup = options['hasPowerup']
+    }
 }
 
 MovingObject.prototype.draw = function (ctx) {
