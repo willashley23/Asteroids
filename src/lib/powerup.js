@@ -20,7 +20,7 @@ function PowerUp(posOptions) {
 Utils.inherits(PowerUp, MovingObject);
 
 PowerUp.prototype.randomPowerup = function() {
-  chance = Math.floor(Math.random() * 320)
+  let chance = Math.floor(Math.random() * 320)
   if (chance === 5 && this.game.powerups < 1) {
     this.game.powerups += 1;
     return true

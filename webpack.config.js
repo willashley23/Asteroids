@@ -3,9 +3,9 @@
 
 module.exports = {
   context: __dirname,
-  entry: __dirname + "/",
+  entry: __dirname + "/src/source.js",
   output: {
-    path: "./",
+    path: __dirname + "/",
     filename: "bundle.js"
   },
   module: {
@@ -13,7 +13,7 @@ module.exports = {
       {
         test: [/\.js?$/],
         exclude: /node_modules/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           presets: ['es2015']
         }
@@ -22,6 +22,6 @@ module.exports = {
   },
   devtool: 'source-maps',
   resolve: {
-    extensions: ["", ".js",]
+    extensions: [".js",]
   }
 };
