@@ -1,8 +1,7 @@
-const Utils = require('./utils.js');
-const MovingObject = require('./moving_object.js');
-const Ship = require('./ship.js');
-const Bullet = require('./bullet.js');
-
+import Utils from './utils';
+import MovingObject from './moving_object';
+import Ship from './ship';
+import Bullet from './bullet';
 
 class Asteroid extends MovingObject {
   constructor(posOptions) {

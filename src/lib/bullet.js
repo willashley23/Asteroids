@@ -1,5 +1,5 @@
-const Utils = require('./utils.js');
-const MovingObject = require('./moving_object.js');
+import Utils from './utils';
+import MovingObject from './moving_object';
 
 class Bullet extends MovingObject {
     constructor(posOptions) {

@@ -1,6 +1,5 @@
-/* globals key */
-const Game = require('./game.js');
-const Utils = require('./utils.js');
+import Game from './game';
+import Utils from './utils';
 const img = new Image();
 const DIM_X = 800;
 const DIM_Y = 605;

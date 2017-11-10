@@ -159,9 +159,13 @@ module.exports = Util;
 "use strict";
 
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _game = __webpack_require__(7);
 
-// const Game = require('./game');
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MovingObject = function MovingObject(options) {
   _classCallCheck(this, MovingObject);
@@ -209,16 +213,29 @@ module.exports = MovingObject;
 "use strict";
 
 
+var _utils = __webpack_require__(0);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+var _moving_object = __webpack_require__(1);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+var _bullet = __webpack_require__(3);
+
+var _bullet2 = _interopRequireDefault(_bullet);
+
+var _powerup = __webpack_require__(4);
+
+var _powerup2 = _interopRequireDefault(_powerup);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Utils = __webpack_require__(0);
-var MovingObject = __webpack_require__(1);
-var Bullet = __webpack_require__(3);
-var PowerUp = __webpack_require__(4);
 
 var Ship = function (_MovingObject) {
   _inherits(Ship, _MovingObject);
@@ -242,7 +259,7 @@ var Ship = function (_MovingObject) {
   }
 
   return Ship;
-}(MovingObject);
+}(_moving_object2.default);
 
 Ship.prototype.relocate = function () {
   this.invulnerable = true;
@@ -255,7 +272,7 @@ Ship.prototype.relocate = function () {
 };
 
 Ship.prototype.collideWith = function (otherObject) {
-  if (otherObject instanceof PowerUp) {
+  if (otherObject instanceof _powerup2.default) {
     if (otherObject.powerupType === 2) {
       this.hasTripleShot = true;
       this.currentNumBullets = this.game.bullets.length;
@@ -285,13 +302,13 @@ Ship.prototype.fireBullet = function () {
       secondBulletPos = [this.pos[0], this.pos[1] - 30];
       thirdBulletPos = [this.pos[0], this.pos[1] + 30];
     }
-    var bullet1 = new Bullet({
+    var bullet1 = new _bullet2.default({
       pos: secondBulletPos,
       vel: bulletVel,
       game: this.game,
       angle: this.facingDir
     });
-    var bullet2 = new Bullet({
+    var bullet2 = new _bullet2.default({
       pos: thirdBulletPos,
       vel: bulletVel,
       game: this.game,
@@ -308,7 +325,7 @@ Ship.prototype.fireBullet = function () {
   } else {
     defaultBulletPos = [this.pos[0], this.pos[1] - 6];
   }
-  var bullet3 = new Bullet({
+  var bullet3 = new _bullet2.default({
     pos: defaultBulletPos,
     vel: bulletVel,
     game: this.game,
@@ -352,7 +369,7 @@ Ship.prototype.draw = function (ctx) {
   };
   forceField.src = 'images/forcefield.png';
   img.src = 'images/galaga_ship.png';
-  var rotatedShip = Utils.rotateAndCache(img, this.facingDir);
+  var rotatedShip = _utils2.default.rotateAndCache(img, this.facingDir);
   // Blink sprite to indicate invulnerabiltiy 
   if (!this.invulnerable || Math.floor(Date.now() / 60) % 2) {
     ctx.drawImage(rotatedShip, this.pos[0] - this.radius, this.pos[1] - this.radius);
@@ -371,14 +388,21 @@ module.exports = Ship;
 "use strict";
 
 
+var _utils = __webpack_require__(0);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+var _moving_object = __webpack_require__(1);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Utils = __webpack_require__(0);
-var MovingObject = __webpack_require__(1);
 
 var Bullet = function (_MovingObject) {
   _inherits(Bullet, _MovingObject);
@@ -396,7 +420,7 @@ var Bullet = function (_MovingObject) {
   }
 
   return Bullet;
-}(MovingObject);
+}(_moving_object2.default);
 
 Bullet.prototype.draw = function (ctx) {
   var img = new Image();
@@ -407,7 +431,7 @@ Bullet.prototype.draw = function (ctx) {
     }
   };
   img.src = 'images/laser.png';
-  var rotatedLaser = Utils.rotateAndCache(img, this.angle);
+  var rotatedLaser = _utils2.default.rotateAndCache(img, this.angle);
   ctx.drawImage(rotatedLaser, this.pos[0] - this.radius, this.pos[1] - this.radius);
 };
 
@@ -500,11 +524,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _game = __webpack_require__(7);
+
+var _game2 = _interopRequireDefault(_game);
+
+var _utils = __webpack_require__(0);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/* globals key */
-var Game = __webpack_require__(7);
-var Utils = __webpack_require__(0);
 var img = new Image();
 var DIM_X = 800;
 var DIM_Y = 605;
@@ -516,7 +547,7 @@ var GameView = function () {
         _classCallCheck(this, GameView);
 
         this.ctx = ctx;
-        this.game = new Game("easy");
+        this.game = new _game2.default("easy");
         this.onHomeScreen = true;
     }
 
@@ -556,30 +587,30 @@ var GameView = function () {
                 requestAnimationFrame(this.animate.bind(this));
                 key('enter', function () {
                     _this.onHomeScreen = false;
-                    Utils.hideHomeScreen();
+                    _utils2.default.hideHomeScreen();
                 });
 
                 key('1', function () {
                     _this.onHomeScreen = false;
-                    Utils.hideHomeScreen();
+                    _utils2.default.hideHomeScreen();
                 });
 
                 key('2', function () {
                     _this.onHomeScreen = false;
-                    Utils.hideHomeScreen();
-                    _this.game = new Game("medium");
+                    _utils2.default.hideHomeScreen();
+                    _this.game = new _game2.default("medium");
                 });
 
                 key('3', function () {
                     _this.onHomeScreen = false;
-                    Utils.hideHomeScreen();
-                    _this.game = new Game("hard");
+                    _utils2.default.hideHomeScreen();
+                    _this.game = new _game2.default("hard");
                 });
 
                 key('4', function () {
                     _this.onHomeScreen = false;
-                    Utils.hideHomeScreen();
-                    _this.game = new Game("endless");
+                    _utils2.default.hideHomeScreen();
+                    _this.game = new _game2.default("endless");
                 });
             } else {
                 this.game.step();
@@ -593,15 +624,15 @@ var GameView = function () {
                     if (this.game.win()) {
                         document.getElementById('game-header').innerHTML = "You Win";
                         document.getElementById('game-header').style.left = "235px";
-                        Utils.revealHTML();
+                        _utils2.default.revealHTML();
                         new Audio('sounds/victory.wav').play();
                     } else {
                         document.getElementById('game-header').innerHTML = "GAME OVER";
-                        Utils.revealHTML();
+                        _utils2.default.revealHTML();
                         new Audio('sounds/loss.wav').play();
                     }
                     key('enter', function () {
-                        _this.game = new Game();
+                        _this.game = new _game2.default();
                         _this.start();
                     });
                 }
@@ -642,11 +673,22 @@ module.exports = GameView;
 "use strict";
 
 
+var _asteroid3 = __webpack_require__(8);
+
+var _asteroid4 = _interopRequireDefault(_asteroid3);
+
+var _ship = __webpack_require__(2);
+
+var _ship2 = _interopRequireDefault(_ship);
+
+var _powerup = __webpack_require__(4);
+
+var _powerup2 = _interopRequireDefault(_powerup);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Asteroid = __webpack_require__(8);
-var Ship = __webpack_require__(2);
-var PowerUp = __webpack_require__(4);
 var img = new Image();
 var heart = new Image();
 
@@ -657,8 +699,8 @@ var Game = function Game(difficulty) {
   this.setAsteroidCount(this.difficultySetting);
   this.asteroids = [];
   this.addAsteroids();
-  this.ship = new Ship({ pos: this.randomPosition(), game: this });
-  this.powerup = new PowerUp({ game: this });
+  this.ship = new _ship2.default({ pos: this.randomPosition(), game: this });
+  this.powerup = new _powerup2.default({ game: this });
   this.bullets = [];
   this.lives = 3;
   this.powerups = 0;
@@ -778,21 +820,21 @@ Game.prototype.addAsteroids = function () {
     console.log(this.asteroids.length);
     for (var j = 0; j < 5; j++) {
       var y = Math.floor(Math.random() * 500);
-      var asteroid = new Asteroid({ game: this, pos: [800, y], radius: 30 });
+      var asteroid = new _asteroid4.default({ game: this, pos: [800, y], radius: 30 });
       this.asteroids.push(asteroid);
     }
   } else if (fragment === null) {
     for (var i = 0; i < Game.NUM_ASTEROIDS; i++) {
       var x = Math.floor(Math.random() * 500);
       var _y = Math.floor(Math.random() * 500);
-      var _asteroid = new Asteroid({ game: this, pos: [x, _y], radius: 30 });
+      var _asteroid = new _asteroid4.default({ game: this, pos: [x, _y], radius: 30 });
       this.asteroids.push(_asteroid);
     }
   } else {
     for (var _i = 0; _i < 3; _i++) {
       var _x4 = respawnPos[0];
       var _y2 = respawnPos[1];
-      var _asteroid2 = new Asteroid({ game: this, pos: [_x4, _y2], radius: 15, justSpawned: true });
+      var _asteroid2 = new _asteroid4.default({ game: this, pos: [_x4, _y2], radius: 15, justSpawned: true });
       this.asteroids.push(_asteroid2);
     }
   }
@@ -858,16 +900,29 @@ module.exports = Game;
 "use strict";
 
 
+var _utils = __webpack_require__(0);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+var _moving_object = __webpack_require__(1);
+
+var _moving_object2 = _interopRequireDefault(_moving_object);
+
+var _ship = __webpack_require__(2);
+
+var _ship2 = _interopRequireDefault(_ship);
+
+var _bullet = __webpack_require__(3);
+
+var _bullet2 = _interopRequireDefault(_bullet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Utils = __webpack_require__(0);
-var MovingObject = __webpack_require__(1);
-var Ship = __webpack_require__(2);
-var Bullet = __webpack_require__(3);
 
 var Asteroid = function (_MovingObject) {
   _inherits(Asteroid, _MovingObject);
@@ -880,16 +935,16 @@ var Asteroid = function (_MovingObject) {
     _this.angle = 0;
     _this.hasPowerup = false;
     _this.isWrappable = true;
-    _this.type = Utils.randomNum();
-    _this.vel = Utils.randomVec(posOptions['game'.difficultySetting]);
+    _this.type = _utils2.default.randomNum();
+    _this.vel = _utils2.default.randomVec(posOptions['game'.difficultySetting]);
     return _this;
   }
 
   return Asteroid;
-}(MovingObject);
+}(_moving_object2.default);
 
 Asteroid.prototype.collideWith = function (otherObject) {
-  if (otherObject instanceof Ship && !otherObject.invulnerable) {
+  if (otherObject instanceof _ship2.default && !otherObject.invulnerable) {
     if (otherObject.hasPowerup) {
       otherObject.hasPowerup = false;
       this.game.removeAsteroid(this);
@@ -898,8 +953,8 @@ Asteroid.prototype.collideWith = function (otherObject) {
       new Audio('sounds/hit.wav').play();
       this.game.decreaseLives();
     }
-  } else if (otherObject instanceof Bullet) {
-    if (this.radius === 30 && Utils.fragmentChance(this.game.difficultySetting) === 1) {
+  } else if (otherObject instanceof _bullet2.default) {
+    if (this.radius === 30 && _utils2.default.fragmentChance(this.game.difficultySetting) === 1) {
       this.game.removeBullet(otherObject);
       var currPos = this.pos;
       this.game.addAsteroids(true, [this.pos[0], this.pos[1]]);

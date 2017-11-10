@@ -1,6 +1,6 @@
-const Asteroid = require('./asteroid.js');
-const Ship = require('./ship.js');
-const PowerUp = require('./powerup.js');
+import Asteroid from './asteroid';
+import Ship from './ship';
+import PowerUp from './powerup';
 const img = new Image();
 const heart = new Image();
 
