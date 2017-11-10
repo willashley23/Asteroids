@@ -6,28 +6,14 @@ const Bullet = require('./bullet.js');
 
 class Asteroid extends MovingObject {
   constructor(posOptions) {
-      // let options = {
-      //   game: posOptions['game'], 
-      //   pos: posOptions['pos'], 
-      //   radius: posOptions['radius'], 
-      //   justSpawned: posOptions['justSpawned'],
-      //   vel: Utils.randomVec(posOptions['game'].difficultySetting), 
-      //   wrappable: true, 
-      //   type: Utils.randomNum(), 
-      //   angle: 0,
-      //   hasPowerup: false
-      // }
       super(posOptions);
       this.angle = 0;
       this.hasPowerup = false;
-      this.wrappable = true;
+      this.isWrappable = true;
       this.type = Utils.randomNum();
       this.vel = Utils.randomVec(posOptions['game'.difficultySetting]);
   }
-  //MovingObject.call(this, options);
 }
-
-//Utils.inherits(Asteroid, MovingObject);
 
 
 Asteroid.prototype.collideWith = function(otherObject) {

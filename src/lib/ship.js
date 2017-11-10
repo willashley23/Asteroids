@@ -3,25 +3,21 @@ const MovingObject = require('./moving_object.js');
 const Bullet = require('./bullet.js');
 const PowerUp = require('./powerup.js');
 
-function Ship(posOptions) {
-  let options = {
-    game: posOptions['game'], 
-    pos: posOptions['pos'],
-    radius: 20,
-    vel: [0,0],
-    wrappable: true,
-    type: 0,
-    angle: 0,
-    hasPowerup: false  
-  }
-  this.hasTripleShot = false;
-  this.currentNumBullets = 0;
-  this.invulnerable = false;
-  MovingObject.call(this, options);
-  this.facingDir = 0;
+class Ship extends MovingObject {
+    constructor(posOptions) {
+        super(posOptions);
+        this.radius = 20;
+        this.vel = [0,0];
+        this.isWrappable = true;
+        this.type = 0;
+        this.angle = 0;
+        this.hasPowerup = false;
+        this.hasTripleShot = false;
+        this.currentNumBullets = 0;
+        this.invulnerable = false;
+        this.facingDir = 0;
+    }
 }
-
-Utils.inherits(Ship, MovingObject);
 
 Ship.prototype.relocate = function () {
   this.invulnerable = true

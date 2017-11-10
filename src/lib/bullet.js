@@ -5,23 +5,12 @@ class Bullet extends MovingObject {
     constructor(posOptions) {
         super(posOptions);
         this.radius = 5;
-        this.wrappable = false;
+        this.isWrappable = false;
         this.type = 0;
         this.hasPowerup = false;
     }
-  // let options = { 
-  //   game: posOptions['game'], 
-  //   pos: posOptions['pos'], 
-  //   vel: posOptions['vel'], 
-  //   angle: posOptions['angle'],  
-  //   radius: 5, 
-  //   wrappable: false, 
-  //   type: 0,
-  //   hasPowerup: false
-  // }
-  //MovingObject.call(this, options);
 }
-//Utils.inherits(Bullet, MovingObject);
+
 
 Bullet.prototype.draw = function (ctx) {
   const img = new Image();

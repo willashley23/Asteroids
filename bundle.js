@@ -209,30 +209,40 @@ module.exports = MovingObject;
 "use strict";
 
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var Utils = __webpack_require__(0);
 var MovingObject = __webpack_require__(1);
 var Bullet = __webpack_require__(3);
 var PowerUp = __webpack_require__(4);
 
-function Ship(posOptions) {
-  var options = {
-    game: posOptions['game'],
-    pos: posOptions['pos'],
-    radius: 20,
-    vel: [0, 0],
-    wrappable: true,
-    type: 0,
-    angle: 0,
-    hasPowerup: false
-  };
-  this.hasTripleShot = false;
-  this.currentNumBullets = 0;
-  this.invulnerable = false;
-  MovingObject.call(this, options);
-  this.facingDir = 0;
-}
+var Ship = function (_MovingObject) {
+  _inherits(Ship, _MovingObject);
 
-Utils.inherits(Ship, MovingObject);
+  function Ship(posOptions) {
+    _classCallCheck(this, Ship);
+
+    var _this = _possibleConstructorReturn(this, (Ship.__proto__ || Object.getPrototypeOf(Ship)).call(this, posOptions));
+
+    _this.radius = 20;
+    _this.vel = [0, 0];
+    _this.isWrappable = true;
+    _this.type = 0;
+    _this.angle = 0;
+    _this.hasPowerup = false;
+    _this.hasTripleShot = false;
+    _this.currentNumBullets = 0;
+    _this.invulnerable = false;
+    _this.facingDir = 0;
+    return _this;
+  }
+
+  return Ship;
+}(MovingObject);
 
 Ship.prototype.relocate = function () {
   this.invulnerable = true;
@@ -379,27 +389,14 @@ var Bullet = function (_MovingObject) {
     var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, posOptions));
 
     _this.radius = 5;
-    _this.wrappable = false;
+    _this.isWrappable = false;
     _this.type = 0;
     _this.hasPowerup = false;
     return _this;
   }
-  // let options = { 
-  //   game: posOptions['game'], 
-  //   pos: posOptions['pos'], 
-  //   vel: posOptions['vel'], 
-  //   angle: posOptions['angle'],  
-  //   radius: 5, 
-  //   wrappable: false, 
-  //   type: 0,
-  //   hasPowerup: false
-  // }
-  //MovingObject.call(this, options);
-
 
   return Bullet;
 }(MovingObject);
-//Utils.inherits(Bullet, MovingObject);
 
 Bullet.prototype.draw = function (ctx) {
   var img = new Image();
@@ -879,34 +876,17 @@ var Asteroid = function (_MovingObject) {
     _classCallCheck(this, Asteroid);
 
     var _this = _possibleConstructorReturn(this, (Asteroid.__proto__ || Object.getPrototypeOf(Asteroid)).call(this, posOptions));
-    // let options = {
-    //   game: posOptions['game'], 
-    //   pos: posOptions['pos'], 
-    //   radius: posOptions['radius'], 
-    //   justSpawned: posOptions['justSpawned'],
-    //   vel: Utils.randomVec(posOptions['game'].difficultySetting), 
-    //   wrappable: true, 
-    //   type: Utils.randomNum(), 
-    //   angle: 0,
-    //   hasPowerup: false
-    // }
-
 
     _this.angle = 0;
     _this.hasPowerup = false;
-    _this.wrappable = true;
+    _this.isWrappable = true;
     _this.type = Utils.randomNum();
     _this.vel = Utils.randomVec(posOptions['game'.difficultySetting]);
     return _this;
   }
-  //MovingObject.call(this, options);
-
 
   return Asteroid;
 }(MovingObject);
-
-//Utils.inherits(Asteroid, MovingObject);
-
 
 Asteroid.prototype.collideWith = function (otherObject) {
   if (otherObject instanceof Ship && !otherObject.invulnerable) {
