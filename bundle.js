@@ -629,6 +629,8 @@ module.exports = Ship;
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _utils = __webpack_require__(0);
 
 var _utils2 = _interopRequireDefault(_utils);
@@ -646,35 +648,39 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Bullet = function (_MovingObject) {
-  _inherits(Bullet, _MovingObject);
+    _inherits(Bullet, _MovingObject);
 
-  function Bullet(posOptions) {
-    _classCallCheck(this, Bullet);
+    function Bullet(posOptions) {
+        _classCallCheck(this, Bullet);
 
-    var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, posOptions));
+        var _this = _possibleConstructorReturn(this, (Bullet.__proto__ || Object.getPrototypeOf(Bullet)).call(this, posOptions));
 
-    _this.radius = 5;
-    _this.isWrappable = false;
-    _this.type = 0;
-    _this.hasPowerup = false;
-    return _this;
-  }
-
-  return Bullet;
-}(_moving_object2.default);
-
-Bullet.prototype.draw = function (ctx) {
-  var img = new Image();
-  var that = this;
-  img.onload = function () {
-    if (!that.game.lose() && !that.game.win()) {
-      ctx.drawImage(img, 0, 0);
+        _this.radius = 5;
+        _this.isWrappable = false;
+        _this.type = 0;
+        _this.hasPowerup = false;
+        return _this;
     }
-  };
-  img.src = 'images/laser.png';
-  var rotatedLaser = _utils2.default.rotateAndCache(img, this.angle);
-  ctx.drawImage(rotatedLaser, this.pos[0] - this.radius, this.pos[1] - this.radius);
-};
+
+    _createClass(Bullet, [{
+        key: 'draw',
+        value: function draw(ctx) {
+            var _this2 = this;
+
+            var img = new Image();
+            img.onload = function () {
+                if (!_this2.game.lose() && !_this2.game.win()) {
+                    ctx.drawImage(img, 0, 0);
+                }
+            };
+            img.src = 'images/laser.png';
+            var rotatedLaser = _utils2.default.rotateAndCache(img, this.angle);
+            ctx.drawImage(rotatedLaser, this.pos[0] - this.radius, this.pos[1] - this.radius);
+        }
+    }]);
+
+    return Bullet;
+}(_moving_object2.default);
 
 module.exports = Bullet;
 

@@ -20,16 +20,16 @@ class GameView {
 
     animate(time) {
         speed += 1;
-      if (speed >= 605) {
-        speed = 0;
-      };
-
-      if (this.onHomeScreen) {
-        let that = this;
-        img.onload = function () {
-          that.ctx.drawImage(img, 0, 0)
+        if (speed >= 605) {
+            speed = 0;
         };
-        
+
+        if (this.onHomeScreen) {
+            let that = this;
+            img.onload = function () {
+              that.ctx.drawImage(img, 0, 0)
+        };
+
         img.src = 'images/space.png';
         let y = 0;
         let x = 0;
@@ -38,7 +38,7 @@ class GameView {
         this.ctx.drawImage(img, x, y - DIM_Y);
 
         if (y >= DIM_Y) {
-          y = 0;
+            y = 0;
         };
 
         requestAnimationFrame(this.animate.bind(this));
@@ -69,7 +69,7 @@ class GameView {
             Utils.hideHomeScreen();
             this.game = new Game("endless");
         });
-      } else {
+        } else {
             this.game.step();
             this.game.draw(this.ctx, speed);
             if(!this.game.lose() && !this.game.win()){
