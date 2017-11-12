@@ -920,6 +920,8 @@ module.exports = GameView;
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _utils = __webpack_require__(0);
 
 var _utils2 = _interopRequireDefault(_utils);
@@ -945,81 +947,85 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Asteroid = function (_MovingObject) {
-  _inherits(Asteroid, _MovingObject);
+    _inherits(Asteroid, _MovingObject);
 
-  function Asteroid(posOptions) {
-    _classCallCheck(this, Asteroid);
+    function Asteroid(posOptions) {
+        _classCallCheck(this, Asteroid);
 
-    var _this = _possibleConstructorReturn(this, (Asteroid.__proto__ || Object.getPrototypeOf(Asteroid)).call(this, posOptions));
+        var _this = _possibleConstructorReturn(this, (Asteroid.__proto__ || Object.getPrototypeOf(Asteroid)).call(this, posOptions));
 
-    _this.angle = 0;
-    _this.hasPowerup = false;
-    _this.isWrappable = true;
-    _this.type = _utils2.default.randomNum();
-    _this.vel = _utils2.default.randomVec(posOptions['game'.difficultySetting]);
-    return _this;
-  }
+        _this.angle = 0;
+        _this.hasPowerup = false;
+        _this.isWrappable = true;
+        _this.type = _utils2.default.randomNum();
+        _this.vel = _utils2.default.randomVec(posOptions['game'.difficultySetting]);
+        return _this;
+    }
 
-  return Asteroid;
+    _createClass(Asteroid, [{
+        key: 'collideWith',
+        value: function collideWith(otherObject) {
+            if (otherObject instanceof _ship2.default && !otherObject.invulnerable) {
+                if (otherObject.hasPowerup) {
+                    otherObject.hasPowerup = false;
+                    this.game.removeAsteroid(this);
+                } else {
+                    otherObject.relocate();
+                    new Audio('sounds/hit.wav').play();
+                    this.game.decreaseLives();
+                }
+            } else if (otherObject instanceof _bullet2.default) {
+                if (this.radius === 30 && _utils2.default.fragmentChance(this.game.difficultySetting) === 1) {
+                    this.game.removeBullet(otherObject);
+                    var currPos = this.pos;
+                    this.game.addAsteroids(true, [this.pos[0], this.pos[1]]);
+                    this.game.removeAsteroid(this);
+                } else {
+                    this.game.removeBullet(otherObject);
+                    this.game.removeAsteroid(this);
+                }
+                if (this.radius === 30) {
+                    new Audio('sounds/explosion.wav').play();
+                } else {
+                    new Audio('sounds/explosionsmall.wav').play();
+                }
+            }
+        }
+    }]);
+
+    return Asteroid;
 }(_moving_object2.default);
 
-Asteroid.prototype.collideWith = function (otherObject) {
-  if (otherObject instanceof _ship2.default && !otherObject.invulnerable) {
-    if (otherObject.hasPowerup) {
-      otherObject.hasPowerup = false;
-      this.game.removeAsteroid(this);
-    } else {
-      otherObject.relocate();
-      new Audio('sounds/hit.wav').play();
-      this.game.decreaseLives();
-    }
-  } else if (otherObject instanceof _bullet2.default) {
-    if (this.radius === 30 && _utils2.default.fragmentChance(this.game.difficultySetting) === 1) {
-      this.game.removeBullet(otherObject);
-      var currPos = this.pos;
-      this.game.addAsteroids(true, [this.pos[0], this.pos[1]]);
-      this.game.removeAsteroid(this);
-    } else {
-      this.game.removeBullet(otherObject);
-      this.game.removeAsteroid(this);
-    }if (this.radius === 30) {
-      new Audio('sounds/explosion.wav').play();
-    } else {
-      new Audio('sounds/explosionsmall.wav').play();
-    }
-  }
-};
-
 Asteroid.prototype.draw = function (ctx) {
-  if (this.type === 1) {
-    var img = new Image();
-    var that = this;
-    img.onload = function () {
-      if (!that.game.lose() && !that.game.win()) {
-        ctx.drawImage(img, 0, 0);
-      }
-    };
-    if (this.radius === 15) {
-      img.src = 'images/smallasteroid1.png';
+    var _this2 = this;
+
+    if (this.type === 1) {
+        var img = new Image();
+        img.onload = function () {
+            if (!_this2.game.lose() && !_this2.game.win()) {
+                ctx.drawImage(img, 0, 0);
+            }
+        };
+        if (this.radius === 15) {
+            img.src = 'images/smallasteroid1.png';
+        } else {
+            img.src = 'images/asteroid1.png';
+        }
+        ctx.drawImage(img, this.pos[0] - this.radius, this.pos[1] - this.radius);
     } else {
-      img.src = 'images/asteroid1.png';
+        var _img = new Image();
+        _img.onload = function () {
+            if (!_this2.game.lose() && !_this2.game.win()) {
+                ctx.drawImage(_img, 0, 0);
+            }
+        };
+        if (this.radius === 15) {
+            _img.src = 'images/smallasteroid2.png';
+        } else {
+            _img.src = 'images/asteroid2.png';
+        }
+        ctx.drawImage(_img, this.pos[0] - this.radius, this.pos[1] - this.radius);
     }
-    ctx.drawImage(img, this.pos[0] - this.radius, this.pos[1] - this.radius);
-  } else {
-    var _img = new Image();
-    var _that = this;
-    _img.onload = function () {
-      if (!_that.game.lose() && !_that.game.win()) {
-        ctx.drawImage(_img, 0, 0);
-      }
-    };
-    if (this.radius === 15) {
-      _img.src = 'images/smallasteroid2.png';
-    } else {
-      _img.src = 'images/asteroid2.png';
-    }
-    ctx.drawImage(_img, this.pos[0] - this.radius, this.pos[1] - this.radius);
-  }
 };
 
 module.exports = Asteroid;
