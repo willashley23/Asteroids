@@ -4,7 +4,7 @@ import PowerUp from './powerup';
 const img = new Image();
 const heart = new Image();
 
-class Game {
+export default class Game {
     constructor(difficulty) {
         this.difficultySetting = difficulty;
         this.setAsteroidCount(this.difficultySetting);
@@ -197,4 +197,4 @@ Game.prototype.randomPosition = function () {
   return [x,y];
 };
 
-module.exports = Game;
+//module.exports = Game;

@@ -227,6 +227,10 @@ module.exports = MovingObject;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _asteroid3 = __webpack_require__(8);
 
 var _asteroid4 = _interopRequireDefault(_asteroid3);
@@ -261,6 +265,8 @@ var Game = function Game(difficulty) {
   this.powerupsArr = [this.powerup];
   // Start game with 2 seconds of invulnerability
 };
+
+exports.default = Game;
 
 Game.DIM_X = 800;
 Game.DIM_Y = 605;
@@ -445,7 +451,7 @@ Game.prototype.randomPosition = function () {
   return [x, y];
 };
 
-module.exports = Game;
+//module.exports = Game;
 
 /***/ }),
 /* 3 */
@@ -453,6 +459,10 @@ module.exports = Game;
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _utils = __webpack_require__(0);
 
@@ -501,6 +511,9 @@ var Ship = function (_MovingObject) {
 
   return Ship;
 }(_moving_object2.default);
+
+exports.default = Ship;
+
 
 Ship.prototype.relocate = function () {
   this.invulnerable = true;
@@ -620,14 +633,16 @@ Ship.prototype.draw = function (ctx) {
   }
 };
 
-module.exports = Ship;
-
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -682,7 +697,7 @@ var Bullet = function (_MovingObject) {
     return Bullet;
 }(_moving_object2.default);
 
-module.exports = Bullet;
+exports.default = Bullet;
 
 /***/ }),
 /* 5 */
@@ -920,6 +935,10 @@ module.exports = GameView;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _utils = __webpack_require__(0);
@@ -996,6 +1015,9 @@ var Asteroid = function (_MovingObject) {
     return Asteroid;
 }(_moving_object2.default);
 
+exports.default = Asteroid;
+
+
 Asteroid.prototype.draw = function (ctx) {
     var _this2 = this;
 
@@ -1027,8 +1049,6 @@ Asteroid.prototype.draw = function (ctx) {
         ctx.drawImage(_img, this.pos[0] - this.radius, this.pos[1] - this.radius);
     }
 };
-
-module.exports = Asteroid;
 
 /***/ })
 /******/ ]);

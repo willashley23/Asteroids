@@ -3,7 +3,7 @@ import MovingObject from './moving_object';
 import Bullet from './bullet';
 import PowerUp from './powerup';
 
-class Ship extends MovingObject {
+export default class Ship extends MovingObject {
     constructor(posOptions) {
         super(posOptions);
         this.radius = 20;
@@ -137,5 +137,3 @@ Ship.prototype.draw = function (ctx) {
     ctx.drawImage(forceField, this.pos[0]-38, this.pos[1]-38);
   }
 };
-
-module.exports = Ship;

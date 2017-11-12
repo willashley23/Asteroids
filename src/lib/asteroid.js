@@ -3,7 +3,7 @@ import MovingObject from './moving_object';
 import Ship from './ship';
 import Bullet from './bullet';
 
-class Asteroid extends MovingObject {
+export default class Asteroid extends MovingObject {
     constructor(posOptions) {
         super(posOptions);
         this.angle = 0;
@@ -72,5 +72,3 @@ Asteroid.prototype.draw = function (ctx) {
   ctx.drawImage(img, this.pos[0]-this.radius, this.pos[1]-this.radius);
   }
 };
-
-module.exports = Asteroid;

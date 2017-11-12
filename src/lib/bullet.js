@@ -1,7 +1,7 @@
 import Utils from './utils';
 import MovingObject from './moving_object';
 
-class Bullet extends MovingObject {
+export default class Bullet extends MovingObject {
     constructor(posOptions) {
         super(posOptions);
         this.radius = 5;
@@ -22,5 +22,3 @@ class Bullet extends MovingObject {
         ctx.drawImage(rotatedLaser, this.pos[0] - this.radius, this.pos[1] - this.radius)
     };
 }
-
-module.exports = Bullet;
