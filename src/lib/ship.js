@@ -17,17 +17,17 @@ export default class Ship extends MovingObject {
         this.invulnerable = false;
         this.facingDir = 0;
     }
+
+    relocate() {
+        this.invulnerable = true
+        this.pos = this.game.randomPosition();
+        this.vel = [0,0];
+        window.setTimeout(() => {
+            this.invulnerable = false;
+        }, 1500);
+    };
 }
 
-Ship.prototype.relocate = function () {
-  this.invulnerable = true
-  this.pos = this.game.randomPosition();
-  this.vel = [0,0];
-  let that = this;
-  window.setTimeout( function () {
-    that.invulnerable = false;
-  }, 1500);
-};
 
 Ship.prototype.collideWith = function(otherObject) {
   if (otherObject instanceof PowerUp) {
