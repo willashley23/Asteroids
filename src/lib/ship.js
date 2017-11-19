@@ -26,23 +26,24 @@ export default class Ship extends MovingObject {
             this.invulnerable = false;
         }, 1500);
     };
+    
+    collideWith(otherObject) {
+        if (otherObject instanceof PowerUp) {
+            if (otherObject.powerupType === 2) {
+                this.hasTripleShot = true;
+                this.currentNumBullets = this.game.bullets.length;
+                new Audio('sounds/tripleshot.wav').play();
+            } else {
+                this.hasPowerup = true;
+                new Audio('sounds/powerup.wav').play();
+            }
+            this.game.removePowerUp(otherObject);
+            this.game.powerups = 0;
+        } 
+    };
 }
 
 
-Ship.prototype.collideWith = function(otherObject) {
-  if (otherObject instanceof PowerUp) {
-    if (otherObject.powerupType === 2) {
-      this.hasTripleShot = true;
-      this.currentNumBullets = this.game.bullets.length;
-      new Audio('sounds/tripleshot.wav').play();
-    } else {
-      this.hasPowerup = true;
-      new Audio('sounds/powerup.wav').play();
-    }
-    this.game.removePowerUp(otherObject);
-    this.game.powerups = 0;
-  } 
-};
 
 Ship.prototype.fireBullet = function () {
   let bulletVel = [Math.sin(-this.facingDir)*-10, Math.cos(-this.facingDir)*-10]
