@@ -26,7 +26,7 @@ export default class Ship extends MovingObject {
             this.invulnerable = false;
         }, 1500);
     };
-    
+
     collideWith(otherObject) {
         if (otherObject instanceof PowerUp) {
             if (otherObject.powerupType === 2) {
@@ -41,59 +41,58 @@ export default class Ship extends MovingObject {
             this.game.powerups = 0;
         } 
     };
+
+    fireBullet() {
+        let bulletVel = [Math.sin(-this.facingDir)*-10, Math.cos(-this.facingDir)*-10]
+        if (this.hasTripleShot) {
+            let totalBullets = this.game.bullets.length;
+            let secondBulletPos;
+            let thirdBulletPos;
+            if (totalBullets - this.currentNumBullets > 80) {
+                this.hasTripleShot = false;
+            }
+            if (Math.abs(this.facingDir) > 3 || Math.round(this.facingDir) === 0) {
+                secondBulletPos = [this.pos[0]-30, this.pos[1]]
+                thirdBulletPos = [this.pos[0]+30, this.pos[1]]
+            } else {
+                secondBulletPos = [this.pos[0], this.pos[1]-30]
+                thirdBulletPos = [this.pos[0], this.pos[1]+30]
+            }
+            let bullet1 = new Bullet( {
+                pos: secondBulletPos, 
+                vel: bulletVel, 
+                game: this.game, 
+                angle: this.facingDir
+            });
+            let bullet2 = new Bullet( {
+                pos: thirdBulletPos, 
+                vel: bulletVel, 
+                game: this.game, 
+                angle: this.facingDir
+            });
+            this.game.bullets.push(bullet1);
+            this.game.bullets.push(bullet2);
+        }
+        let defaultBulletPos;
+        if (this.facingDir === 0) {
+            defaultBulletPos = [this.pos[0]-3.5, this.pos[1]-36];
+        } else if (this.facingDir > 3) {
+            defaultBulletPos = [this.pos[0]-3.5, this.pos[1]+36];
+        }
+        else {
+            defaultBulletPos = [this.pos[0], this.pos[1]-6];
+        }
+        let bullet3 = new Bullet( {
+            pos: defaultBulletPos, 
+            vel: bulletVel, 
+            game: this.game, 
+            angle: this.facingDir
+        });
+        this.game.bullets.push(bullet3);
+        new Audio('sounds/laser.wav').play();
+    };
 }
 
-
-
-Ship.prototype.fireBullet = function () {
-  let bulletVel = [Math.sin(-this.facingDir)*-10, Math.cos(-this.facingDir)*-10]
-  if (this.hasTripleShot) {
-    let totalBullets = this.game.bullets.length;
-    let secondBulletPos;
-    let thirdBulletPos;
-    if (totalBullets - this.currentNumBullets > 80) {
-      this.hasTripleShot = false;
-    }
-    if (Math.abs(this.facingDir) > 3 || Math.round(this.facingDir) === 0) {
-      secondBulletPos = [this.pos[0]-30, this.pos[1]]
-      thirdBulletPos = [this.pos[0]+30, this.pos[1]]
-    } else {
-      secondBulletPos = [this.pos[0], this.pos[1]-30]
-      thirdBulletPos = [this.pos[0], this.pos[1]+30]
-    }
-    let bullet1 = new Bullet( {
-      pos: secondBulletPos, 
-      vel: bulletVel, 
-      game: this.game, 
-      angle: this.facingDir
-    });
-    let bullet2 = new Bullet( {
-      pos: thirdBulletPos, 
-      vel: bulletVel, 
-      game: this.game, 
-      angle: this.facingDir
-    });
-    this.game.bullets.push(bullet1);
-    this.game.bullets.push(bullet2);
-  }
-  let defaultBulletPos;
-  if (this.facingDir === 0) {
-    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]-36]
-  } else if (this.facingDir > 3) {
-    defaultBulletPos = [this.pos[0]-3.5, this.pos[1]+36]
-    }
-  else {
-    defaultBulletPos = [this.pos[0], this.pos[1]-6]
-  }
-  let bullet3 = new Bullet( {
-    pos: defaultBulletPos, 
-    vel: bulletVel, 
-    game: this.game, 
-    angle: this.facingDir
-  });
-  this.game.bullets.push(bullet3);
-  new Audio('sounds/laser.wav').play();
-};
 
 Ship.prototype.power = function (impulse) {
   this.vel[0] += impulse[0];
