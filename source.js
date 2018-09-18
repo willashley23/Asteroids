@@ -1,4 +1,4 @@
-import GameView from'./lib/game_view.js';
+import GameView from './lib/game_view.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   let canvasEl = document.getElementById('game-canvas');

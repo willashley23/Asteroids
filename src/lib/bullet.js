@@ -19,6 +19,7 @@ export default class Bullet extends MovingObject {
         };
         img.src = 'images/laser.png';
         let rotatedLaser = Utils.rotateAndCache(img, this.angle)
+        if (!img.width || !img.height) return;
         ctx.drawImage(rotatedLaser, this.pos[0] - this.radius, this.pos[1] - this.radius)
     };
 }
